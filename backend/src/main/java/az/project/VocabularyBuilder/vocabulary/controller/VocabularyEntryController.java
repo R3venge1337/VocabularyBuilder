@@ -17,41 +17,38 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 class VocabularyEntryController {
     private final VocabularyEntryFacade entryFacade;
 
-    @GetMapping(ControllerPaths.GET_PATH)
+    @GetMapping(ControllerPaths.ENTRY_BASE)
     PageDto<VocabularyEntryView> findEntries(final FilterVocabularyEntryForm filterForm, final PageableRequest pageableRequest) {
         return entryFacade.findVocabularyEntries(filterForm, pageableRequest);
     }
 
-    @GetMapping(ControllerPaths.GET_PATH + "/{id}")
+    @GetMapping(ControllerPaths.Vocabulary.BY_ID)
     public VocabularyEntryView getEntryById(@PathVariable final Long id) {
-       return entryFacade.getEntryById(id);
+        return entryFacade.getEntryById(id);
     }
 
-    @PostMapping(ControllerPaths.GET_PATH)
+    @PostMapping(ControllerPaths.ENTRY_BASE)
     @ResponseStatus(HttpStatus.CREATED)
     public VocabularyEntryView createEntry(@Validated @RequestBody final CreateVocabularyEntryForm request) {
         return entryFacade.createEntry(request);
     }
 
-    @PutMapping(ControllerPaths.GET_PATH + "/{id}")
+    @PutMapping(ControllerPaths.Vocabulary.BY_ID)
     public VocabularyEntryView updateEntry(
             @PathVariable final Long id,
-            @Validated @RequestBody final UpdateVocabularyEntryForm form)
-    {
+            @Validated @RequestBody final UpdateVocabularyEntryForm form) {
         return entryFacade.updateEntry(id, form);
     }
 
-    @DeleteMapping(ControllerPaths.GET_PATH)
+    @DeleteMapping(ControllerPaths.ENTRY_BASE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEntry(@PathVariable final Long id) {
         entryFacade.deleteEntry(id);
