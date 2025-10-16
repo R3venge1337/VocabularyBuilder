@@ -11,7 +11,7 @@ public class ErrorMessages {
 
     // --- Błędy Zasobów  ---
     public static final String VOCABULARY_ENTRY_NOT_FOUND = "Nie znaleziono słowa w słowniku.";
-
+    public static final String QUIZ_NOT_FOUND = "Nie znaleziono danego testu/quizu";
     // --- Walidacja Logiki Biznesowej (Używana w Serwisie) ---
     public static final String DUPLICATE_ENTRY = "Słowo o tej części mowy już istnieje w Twoim słowniku.";
     public static final String CONTEXT_SERIES_REQUIRED = "Dla SERIALU wymagany jest tytuł źródła i numer odcinka.";
