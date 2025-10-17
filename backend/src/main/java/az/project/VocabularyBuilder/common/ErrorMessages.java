@@ -18,4 +18,7 @@ public class ErrorMessages {
     public static final String CONTEXT_MOVIE_REQUIRED = "Dla FILMU wymagany jest tytuł źródła.";
     public static final String CONTEXT_BOOK_REQUIRED = "Dla KSIĄŻKI wymagany jest tytuł źródła.";
     public static final String CONTEXT_MUST_BE_NULL = "Pola kontekstowe (tytuł, odcinek, czas) muszą być puste dla tego typu źródła.";
+    public static final String MOVE_BEHIND_MAP = "Ruch poza planszą.";
+    public static final String FIELD_ALREADY_OCCUPIED = "Pole jest już zajęte.";
+    public static final String WAIT_FOR_AI_TURN = "Czekaj na ruch komputera.";
 }
