@@ -1,0 +1,98 @@
+.container {
+        /* Flexbox do centrowania w pionie i poziomie */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centrowanie horyzontalne */
+        justify-content: center; /* Centrowanie wertykalne */
+        min-height: 100vh;
+        width: 100%;
+        padding: 10px 8px; 
+        background-color: #f9fafb; 
+        box-sizing: border-box;
+      }
+
+      .content-wrapper {
+        width: 100%;
+        max-width: 1152px; /* max-w-6xl */
+      }
+      
+      .app-title {
+        font-size: 2.25rem; /* text-4xl */
+        font-weight: 800; /* font-extrabold */
+        text-align: center;
+        margin-bottom: 2.5rem; /* mb-10 */
+        color: #4f46e5; /* text-indigo-700 */
+      }
+
+      /* ==================================== */
+      /* STYLENIE SIATKI (.card-grid) */
+      /* ==================================== */
+      .card-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* col-span-1 dla mobile */
+        gap: 2rem; /* gap-8 */
+        margin: 0 auto; /* Centrowanie siatki */
+      }
+
+      /* Responsywność dla MD (768px) */
+      @media (min-width: 768px) {
+        .card-grid {
+          grid-template-columns: repeat(2, 1fr); /* md:grid-cols-2 */
+        }
+      }
+
+      /* Responsywność dla LG (1024px) */
+      @media (min-width: 1024px) {
+        .card-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .no-content-message {
+        grid-column: 1 / -1; 
+        text-align: center;
+        font-size: 1.125rem;
+        color: #6b7280; 
+      }
+
+      .app-card {
+        transition: transform 0.2s ease-in-out;
+        cursor: pointer;
+        min-height: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .app-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+      }
+      .card-icon {
+        margin-right: 16px;
+        font-size: 1.875rem;
+      }
+      mat-card-header {
+        padding: 16px 16px 0 16px;
+      }
+      .card-title {
+        font-size: 1.25rem; 
+        font-weight: 600; 
+        display: flex;
+        align-items: center;
+      }
+      .card-description {
+        color: #4b5563; 
+      }
+      .card-content {
+        flex-grow: 1; 
+        padding: 16px;
+      }
+      .card-actions {
+        padding: 0 16px 16px 16px;
+      }
+      .full-width-button {
+          width: 100%;
+          border-radius: 8px;
+      }
