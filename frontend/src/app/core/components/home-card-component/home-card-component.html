@@ -1,0 +1,29 @@
+<div class="container">
+      <div class="content-wrapper">
+        <h1 class="app-title">Witaj w Aplikacji Edukacyjnej</h1>
+        <div class="card-grid">
+          @for (card of featureCards; track card.path) {
+            <mat-card class="app-card">
+              <mat-card-header>
+                  <div class="card-icon">{{ card.icon }}</div> 
+                  <mat-card-title class="card-title">{{ card.title }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content class="card-content">
+                  <p class="card-description">{{ card.description }}</p>
+              </mat-card-content>
+              <mat-card-actions class="card-actions">
+                  <button 
+                      mat-raised-button 
+                      color="primary" 
+                      [routerLink]="card.path"
+                      class="full-width-button">
+                      Przejdź do {{ card.title }}
+                  </button>
+              </mat-card-actions>
+            </mat-card>
+          } @empty {
+            <p class="no-content-message">Brak dostępnych funkcji do wyświetlenia.</p>
+          }
+        </div>
+      </div>
+    </div>
