@@ -53,7 +53,7 @@ export class VocabularyService {
     return this.http.put<VocabularyEntryView>(`${this.API_URL}/vocabulary/${id}`, form);
   }
   deleteEntry(id: number): Observable<any> {
-    return this.http.delete(`${this.API_URL}/posts/${id}`);
+    return this.http.delete(`${this.API_URL}/vocabulary/${id}`);
   }
 
 }
