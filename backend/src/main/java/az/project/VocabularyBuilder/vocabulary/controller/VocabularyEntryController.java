@@ -48,7 +48,7 @@ class VocabularyEntryController {
         return entryFacade.updateEntry(id, form);
     }
 
-    @DeleteMapping(ControllerPaths.ENTRY_BASE)
+    @DeleteMapping(ControllerPaths.Vocabulary.BY_ID)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEntry(@PathVariable final Long id) {
         entryFacade.deleteEntry(id);
