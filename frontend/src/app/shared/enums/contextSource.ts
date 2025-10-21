@@ -1,0 +1,10 @@
+export enum ContextSource {
+  MOVIE = 'MOVIE',
+  SERIES = "SERIES",
+  BOOK = 'BOOK',
+  COURSE = 'COURSE',
+  CONVERSATION = 'CONVERSATION',
+  DICTIONARY = "DICTIONARY",
+  WEBSITE = "WEBSITE",
+  GENERAL = 'GENERAL',
+}

@@ -1,0 +1,103 @@
+// FILTRY I FORMUARZ
+// ----------------------------------
+
+.filter-form-section {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f8f9fa; /* Jasne, neutralne tło dla sekcji filtrowania */
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+}
+
+.filter-form-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Dodaje odstęp między kontrolkami formularza */
+    align-items: flex-end; /* Wyrównuje elementy, nawet jeśli mają różne wysokości */
+}
+
+// Stylizacja pojedynczej kontrolki
+.mat-mdc-form-field {
+    min-width: 200px; /* Utrzymuje minimalną szerokość */
+    flex-grow: 1; /* Pozwala na rozciąganie w dostępnej przestrzeni */
+}
+
+// Stylizacja przycisków
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px; /* Odstęp od ostatniego rzędu filtrów */
+}
+
+.mat-mdc-raised-button.mat-primary {
+    background-color: #3498db; /* Kolor dla "Filtruj" / Primary */
+}
+
+.mat-mdc-button.mat-warn {
+    color: #e74c3c; /* Kolor tekstu dla "Wyczyść" / Warn */
+    border: 1px solid #e74c3c;
+}
+
+// ----------------------------------
+// TABELA
+// ----------------------------------
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 90px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+    white-space: nowrap; /* Zapobiega łamaniu tekstu */
+}
+
+/* --- Status: Nowe / Do Powtórki (TO_REVIEW) --- */
+.badge-toReview {
+    background-color: #f7b731; /* Ciepły żółty */
+    color: #4b3605;
+    border: 1px solid #e0a320;
+}
+
+/* --- Status: W trakcie nauki (LEARNING) --- */
+.badge-learning {
+    background-color: #2980b9; /* Łagodny niebieski */
+    color: #ffffff;
+    border: 1px solid #236c9d;
+}
+
+/* --- Status: Opanowane (MASTERED) --- */
+.badge-mastered {
+    background-color: #27ae60; /* Zielony sukcesu */
+    color: #ffffff;
+    border: 1px solid #1f8a4e;
+}
+
+/* --- Status: Domyślny / Nieznany --- */
+.badge:not(.badge-toReview):not(.badge-learning):not(.badge-mastered) {
+    background-color: #bdc3c7; /* Szary */
+    color: #5d6d7e;
+}
+
+// Responsywność dla mniejszych ekranów
+@media (max-width: 768px) {
+    .filter-form-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mat-mdc-form-field {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .filter-actions {
+        width: 100%;
+        .mat-mdc-button, .mat-mdc-raised-button {
+            flex-grow: 1;
+        }
+    }
+}

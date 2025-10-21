@@ -1,0 +1,113 @@
+.add-vocabulary-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* STYLIZACJA PRZYCISKU FAB (Floating Action Button) */
+.add-toggle-button {
+    /* Ustawienie przycisku na zewnątrz głównej karty, aby służył do aktywacji */
+    position: absolute;
+    top: -20px; /* Przesunięcie nieco do góry, aby wystawał ponad kartę */
+    right: 20px;
+    z-index: 10;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); /* Lekki cień dla efektu "pływania" */
+}
+
+/* STYLIZACJA KARTY FORMULARZA */
+.add-word-card {
+    width: 100%;
+    margin-top: 20px; 
+    transition: all 0.5s ease-in-out;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Bardziej wyraźny cień dla karty */
+}
+
+mat-card-header {
+    padding-bottom: 0;
+}
+
+.align-icon {
+    /* Ustawienie ikony obok tytułu karty */
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+/* STYLIZACJA FORMULARZA WEWNĄTRZ KARTY */
+.vocabulary-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Odstępy między wierszami pól */
+    padding-top: 10px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Odstępy między polami w rzędzie */
+    width: 100%;
+}
+
+/* Ustawienie szerokości pól na desktopie (dwie kolumny) */
+.flex-item {
+    flex: 1 1 45%; 
+    min-width: 150px;
+}
+
+/* Ustawienie szerokości mniejszych, opcjonalnych pól (np. offset czasowy) */
+.small-item {
+    flex: 1 1 30%; 
+    min-width: 120px;
+}
+
+.full-width-field {
+    width: 100%;
+}
+
+/* STYLIZACJA PRZYCISKÓW AKCJI */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    padding: 16px 0 0 0 !important; /* Usuń domyślny dolny padding */
+}
+
+.submit-button {
+    flex: 1;
+    height: 48px;
+    font-weight: 600;
+}
+.reset-button {
+    flex-shrink: 0;
+}
+
+.form-progress-bar {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* RESPONSIVE DESIGN (Mobile) */
+@media (max-width: 768px) {
+    
+    /* Wszystkie pola w jednej kolumnie na małych ekranach */
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .flex-item, .small-item {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    /* Przycisk FAB przeniesiony na dół ekranu, by był łatwo dostępny na mobile */
+    .add-toggle-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        top: auto;
+    }
+
+    .add-word-card {
+        margin-top: 0;
+    }
+}

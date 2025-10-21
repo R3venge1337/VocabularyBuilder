@@ -1,0 +1,160 @@
+<div class="table-container">
+
+    <!-- Sekcja filtrowania (klasa z SCSS) -->
+    <section class="filter-form-section">
+        <h2 class="mat-h2">Filtrowanie Słówek</h2>
+        
+        <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+            <!-- Kontener dla kontrolek z odstępami (klasa z SCSS) -->
+            <div class="filter-form-group">
+                
+                <!-- Filtr Słowny -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Słowo/Fraza</mat-label>
+                    <input matInput formControlName="word" (keyup.enter)="applyFilters()">
+                </mat-form-field>
+
+                <!-- Select Statusu Opanowania -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Status Opanowania</mat-label>
+                    <!-- Używamy (selectionChange) do automatycznego odświeżenia tabeli -->
+                    <mat-select formControlName="masteryStatus" (selectionChange)="handleSelectFilterChange()">
+                        <mat-option [value]="null">-- Wszystkie --</mat-option>
+                        @for (status of masteryStatusKeys; track status) {
+                            <mat-option [value]="status">
+                                <!-- Używamy Pipe'a w template, a nie w komponencie TS -->
+                                {{ status | titlecase }} 
+                            </mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Select Części Mowy -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Część Mowy</mat-label>
+                    <mat-select formControlName="partOfSpeech" (selectionChange)="handleSelectFilterChange()">
+                        <mat-option [value]="null">-- Wszystkie --</mat-option>
+                        @for (part of partOfSpeechKeys; track part) {
+                            <mat-option [value]="part">{{ part | titlecase }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+
+                <!-- Select Źródła Kontekstu -->
+                <mat-form-field appearance="outline">
+                    <mat-label>Źródło Kontekstu</mat-label>
+                    <mat-select formControlName="contextSource" (selectionChange)="handleSelectFilterChange()">
+                        <mat-option [value]="null">-- Wszystkie --</mat-option>
+                        @for (source of contextSourceKeys; track source) {
+                            <mat-option [value]="source">{{ source | titlecase }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="filter-actions">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="isLoading()">
+                        Filtruj
+                    </button>
+                    <button mat-button color="warn" type="button" (click)="clearFilters()" [disabled]="isLoading()">
+                        Wyczyść Filtry
+                    </button>
+            </div>
+        </form>
+    </section>
+
+      <!-- Wskaźnik ładowania -->
+      <div class="flex justify-center items-center py-10" *ngIf="isLoading()">
+        <mat-spinner diameter="40" color="primary"></mat-spinner>
+        <span class="ml-4 text-indigo-600 font-medium">Ładowanie danych...</span>
+      </div>
+
+      <!-- Tabela Danych -->
+      <div *ngIf="!isLoading()" class="bg-white shadow-xl rounded-xl overflow-hidden">
+        <table mat-table 
+               [dataSource]="pageData().content" 
+               class="w-full words-table" 
+               matSort 
+               [matSortActive]="pagination().sortField"
+               [matSortDirection]="matSortDirection()"
+               (matSortChange)="handleSortChange($event)">
+            
+            <!-- Kolumna ID (sortable) -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="id" class="header-cell"> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+            
+            <!-- Kolumna Angielski (sortable) -->
+            <ng-container matColumnDef="wordPhraseEn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="wordPhraseEn" class="header-cell"> Angielski </th>
+                <td mat-cell *matCellDef="let element" class="font-semibold text-gray-800"> {{element.wordPhraseEn}} </td>
+            </ng-container>
+
+            <!-- Kolumna Polski (sortable) -->
+            <ng-container matColumnDef="translationPl">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="translationPl" class="header-cell"> Polski </th>
+                <td mat-cell *matCellDef="let element"> {{element.translationPl}} </td>
+            </ng-container>
+            
+            <!-- Kolumna Cz. Mowy (sortable) -->
+            <ng-container matColumnDef="partOfSpeech">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="partOfSpeech" class="header-cell"> Cz. Mowy </th>
+                <td mat-cell *matCellDef="let element"> {{element.partOfSpeech}} </td>
+            </ng-container>
+
+               <!-- Kolumna Kontekst (sortable) -->
+            <ng-container matColumnDef="contextSource">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="contextSource" class="header-cell"> Wystąpienie </th>
+                <td mat-cell *matCellDef="let element"> {{element.contextSource}} </td>
+            </ng-container>
+
+            <!-- Kolumna Status (sortable) -->
+            <ng-container matColumnDef="masteryStatus">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="masteryStatus" class="header-cell"> Status </th>
+                <td mat-cell *matCellDef="let element"> 
+                  <span class="badge" [ngClass]="getBadgeClass(element.masteryStatus)">
+                        {{element.masteryStatus}}
+                    </span>
+                </td>
+            </ng-container>
+            
+            <!-- Kolumna Data (sortable) -->
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt" class="header-cell"> Data Dodania </th>
+                <td mat-cell *matCellDef="let element"> {{element.createdAt | date:'y.MM.dd'}} </td>
+            </ng-container>
+            
+            <!-- Wiersze -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-indigo-50"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-indigo-50 transition duration-150"></tr>
+
+               <!-- Kolumna Akcje (Usuń) -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Akcje </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <!-- Przycisk z ikoną kosza, wywołujący modal potwierdzenia -->
+                    <button mat-icon-button color="warn" (click)="confirmAndDeleteWord(element)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+            
+        </table>
+        
+        <!-- Paginator -->
+        <mat-paginator [length]="pageData().totalElements"
+                       [pageSize]="pageData().pageSize"
+                       [pageIndex]="pageData().pageNumber - 1"
+                       [pageSizeOptions]="[5, 10, 20, 50]"
+                       (page)="handlePageEvent($event)"
+                       aria-label="Wybierz stronę ze słówkami"
+                       class="mt-0 p-4 border-t border-gray-200">
+        </mat-paginator>
+      </div>
+
+      <!-- Brak danych -->
+      <div *ngIf="!isLoading() && pageData().content.length === 0" class="text-center p-10 text-gray-500 border border-dashed rounded-lg mt-6 bg-white">
+        Brak słówek do wyświetlenia na tej stronie.
+      </div>
+
+    </div>

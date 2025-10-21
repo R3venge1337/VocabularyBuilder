@@ -7,6 +7,6 @@ import { HomeCardComponent } from "../../components/home-card-component/home-car
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss'
 })
-export default class HomePage {
+export class HomePage {
 
 }
