@@ -1,0 +1,141 @@
+<div class="add-vocabulary-wrapper">
+
+    <!-- Przycisk kontrolujący widoczność formularza (Floating Action Button) -->
+    <div class="add-button-container">
+        <button 
+            mat-fab 
+            color="accent" 
+            (click)="toggleForm()" 
+            class="add-toggle-button"
+            [attr.aria-label]="isFormVisible() ? 'Ukryj formularz' : 'Pokaż formularz'">
+            <!-- Zmienna ikona: 'close' gdy formularz widoczny, 'add' gdy ukryty -->
+            <mat-icon>{{ isFormVisible() ? 'close' : 'add' }}</mat-icon>
+        </button>
+    </div>
+
+    <!-- Warunkowe wyświetlanie karty formularza (widoczne tylko, gdy isFormVisible() jest true) -->
+    @if (isFormVisible()) {
+        <mat-card class="add-word-card">
+            <mat-card-header>
+                <mat-card-title>
+                    Dodaj Nowe Słówko
+                </mat-card-title>
+                <mat-card-subtitle>Wprowadź angielskie słowo/frazę wraz z kontekstem i tłumaczeniem.</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+                <form [formGroup]="vocabularyForm" (ngSubmit)="onSubmit()" class="vocabulary-form">
+                    
+                    <!-- Grupa 1: Słówko EN i Tłumaczenie PL -->
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="flex-item">
+                            <mat-label>Słówko / Fraza (EN)</mat-label>
+                            <input matInput formControlName="wordPhraseEn" required minlength="2" maxlength="100">
+                            @if (vocabularyForm.controls['wordPhraseEn'].hasError('required') && vocabularyForm.controls['wordPhraseEn'].touched) {
+                                <mat-error>Pole jest wymagane.</mat-error>
+                            }
+                            @if (vocabularyForm.controls['wordPhraseEn'].hasError('minlength')) {
+                                <mat-error>Min. 2 znaki.</mat-error>
+                            }
+                        </mat-form-field>
+            
+                        <mat-form-field appearance="outline" class="flex-item">
+                            <mat-label>Tłumaczenie (PL)</mat-label>
+                            <input matInput formControlName="translationPl" required minlength="2" maxlength="100">
+                            @if (vocabularyForm.controls['translationPl'].hasError('required') && vocabularyForm.controls['translationPl'].touched) {
+                                <mat-error>Pole jest wymagane.</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Grupa 2: Część Mowy i Źródło Kontekstu (Selecty) -->
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="flex-item">
+                            <mat-label>Część Mowy</mat-label>
+                            <mat-select formControlName="partOfSpeech" required>
+                                <mat-option [value]="null" disabled>-- Wybierz Część Mowy --</mat-option>
+                                @for (part of partOfSpeechKeys; track part) {
+                                    <mat-option [value]="part">{{ part | titlecase }}</mat-option>
+                                }
+                            </mat-select>
+                            @if (vocabularyForm.controls['partOfSpeech'].hasError('required') && vocabularyForm.controls['partOfSpeech'].touched) {
+                                <mat-error>Wybór jest wymagany.</mat-error>
+                            }
+                        </mat-form-field>
+            
+                        <mat-form-field appearance="outline" class="flex-item">
+                            <mat-label>Główne Źródło Kontekstu</mat-label>
+                            <mat-select formControlName="contextSource" required>
+                                <mat-option [value]="null" disabled>-- Wybierz Źródło --</mat-option>
+                                @for (source of contextSourceKeys; track source) {
+                                    <mat-option [value]="ContextSource[source]">{{ source | titlecase }}</mat-option>
+                                }
+                            </mat-select>
+                            @if (vocabularyForm.controls['contextSource'].hasError('required') && vocabularyForm.controls['contextSource'].touched) {
+                                <mat-error>Wybór jest wymagany.</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Grupa 3: Szczegóły Źródła Kontekstu (Warunkowe pola) -->
+                    <div class="form-row">
+                        <mat-form-field appearance="outline" class="flex-item">
+                            <mat-label>Tytuł/Nazwa Źródła (np. Nazwa książki)</mat-label>
+                            <input matInput formControlName="sourceTitle" maxlength="150">
+                        </mat-form-field>
+
+                        <!-- PAMIĘTAJ: To są pola warunkowe, które pokazują się przy MOVIE lub SERIES -->
+                        @if (vocabularyForm.controls['contextSource'].value === ContextSource.MOVIE || 
+                            vocabularyForm.controls['contextSource'].value === ContextSource.SERIES) {
+                            
+                            <mat-form-field appearance="outline" class="small-item">
+                                <mat-label>Odcinek/Rozdział (opcjonalnie)</mat-label>
+                                <input matInput type="number" formControlName="episodeNumber" min="1">
+                                @if (vocabularyForm.controls['episodeNumber'].hasError('min')) {
+                                    <mat-error>Numer musi być większy niż 0.</mat-error>
+                                }
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="small-item">
+                                <mat-label>Offset Czasowy (Sek.)</mat-label>
+                                <input matInput type="number" formControlName="timeOffsetSeconds" min="0">
+                                @if (vocabularyForm.controls['timeOffsetSeconds'].hasError('min')) {
+                                    <mat-error>Czas musi być nieujemny.</mat-error>
+                                }
+                                <mat-hint>Gdzie w filmie/podcaście pojawiło się słówko.</mat-hint>
+                            </mat-form-field>
+                        }
+                    </div>
+                    <!-- Akcje Formularza -->
+                    <mat-card-actions class="form-actions">
+                        <button 
+                            mat-raised-button 
+                            color="primary" 
+                            type="submit" 
+                            [disabled]="vocabularyForm.invalid || isLoading()"
+                            class="submit-button">
+                            <mat-icon>{{ isLoading() ? 'autorenew' : 'save' }}</mat-icon> 
+                            {{ isLoading() ? 'Dodawanie...' : 'Dodaj Słówko' }}
+                        </button>
+
+                        <button 
+                            mat-button 
+                            type="button" 
+                            (click)="resetForm()" 
+                            [disabled]="isLoading() || vocabularyForm.pristine"
+                            class="reset-button">
+                            <mat-icon>refresh</mat-icon> 
+                            Wyczyść
+                        </button>
+                    </mat-card-actions>
+                    
+                    <!-- Pasek postępu pod przyciskami, widoczny tylko podczas ładowania -->
+                    @if (isLoading()) {
+                        <mat-progress-bar mode="indeterminate" class="form-progress-bar"></mat-progress-bar>
+                    }
+
+                </form>
+            </mat-card-content>
+        </mat-card>
+    }
+</div>
