@@ -127,6 +127,17 @@
             <!-- Wiersze -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-indigo-50"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="hover:bg-indigo-50 transition duration-150"></tr>
+
+               <!-- Kolumna Akcje (Usuń) -->
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Akcje </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <!-- Przycisk z ikoną kosza, wywołujący modal potwierdzenia -->
+                    <button mat-icon-button color="warn" (click)="confirmAndDeleteWord(element)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
             
         </table>
         

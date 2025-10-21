@@ -1,4 +1,4 @@
-import { Component, computed, effect, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { VocabularyService } from '../../services/vocabulary-service';
 import { VocabularyEntryView } from '../../models/vocabularyEntryView';
 import { PageDto } from '../../../../shared/models/pageDto';
@@ -17,29 +17,36 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule, Sort, SortDirection } from '@angular/material/sort';
 import { ContextSource } from '../../../../shared/enums/contextSource';
 import { PartOfSpeech } from '../../../../shared/enums/partOfSpeech';
+import { MatIconModule } from "@angular/material/icon";
+import { VocabularyDeleteDialogComponent } from '../vocabulary-delete-dialog-component/vocabulary-delete-dialog-component';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-vocabulary-table-component',
   imports: [
     CommonModule,
-    MatTableModule, 
-    MatPaginatorModule, 
+    MatTableModule,
+    MatPaginatorModule,
     MatProgressSpinnerModule,
     DatePipe,
     MatSortModule,
-    MatButtonModule, 
-    MatInputModule, 
-    MatSelectModule, 
-    MatFormFieldModule, 
-    ReactiveFormsModule 
-  ],
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    ToastrModule,
+],
   templateUrl: './vocabulary-table-component.html',
   styleUrl: './vocabulary-table-component.scss'
 })
 export class VocabularyTableComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
+    private dialog = inject(MatDialog); 
   filterForm: FormGroup;
-  constructor(private vocabularyService: VocabularyService,private fb: FormBuilder){
+  constructor(private vocabularyService: VocabularyService,private fb: FormBuilder, private toastService: ToastrService){
    this.filterForm = this.fb.group({
       word: new FormControl<string>(''),
       masteryStatus: new FormControl<MasteryStatus | null>(null), 
@@ -87,7 +94,7 @@ export class VocabularyTableComponent implements OnInit {
 
   isLoading = signal(false);
 
-   displayedColumns: string[] = ['id', 'wordPhraseEn', 'translationPl', 'partOfSpeech','contextSource', 'masteryStatus', 'createdAt'];
+   displayedColumns: string[] = ['id', 'wordPhraseEn', 'translationPl', 'partOfSpeech','contextSource', 'masteryStatus', 'createdAt','actions'];
 
    matSortDirection = computed<SortDirection>(() => {
     const apiDirection = this.pagination().sortDirection;
@@ -101,8 +108,6 @@ export class VocabularyTableComponent implements OnInit {
   });
 
    getAllEntries(filterForm: FilterVocabularyEntryForm, pageableRequest: PageableRequest): PageDto<VocabularyEntryView>{
-    console.log("Ładowanie z filtrami:", filterForm); 
-    console.log("i paginacją:", pageableRequest);
      this.isLoading.set(true);
      this.vocabularyService.getEntries(filterForm,pageableRequest)
       .subscribe({
@@ -210,4 +215,22 @@ handleSortChange(sort: Sort): void {
     return this.filterForm.getRawValue() as FilterVocabularyEntryForm;
   }
 
+   confirmAndDeleteWord(word: VocabularyEntryView): void {
+    // Otwieramy nowy komponent dialogu
+    const dialogRef = this.dialog.open(VocabularyDeleteDialogComponent, {
+      width: '380px',
+      data: word // Przekazujemy pełne dane słówka
+    });
+
+    // Subskrybujemy wynik zamknięcia dialogu
+    dialogRef.afterClosed().subscribe((deletedId: number | false) => {
+      // Sprawdzamy, czy zamknięcie zwróciło ID (czyli operacja zakończyła się sukcesem)
+      if (typeof deletedId === 'number') {
+        this.toastService.success(`Słówko ID ${deletedId} zostało trwale usunięte.`);
+      } else if (deletedId === false) {
+        // Jeśli zwrócono 'false' (Anuluj lub błąd API w dialogu)
+        this.toastService.info('Usuwanie anulowane lub nieudane.');
+      }
+    });
+  }
 }
