@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Potwierdzenie usunięcia</h2>
+    
+    <div mat-dialog-content>
+      @if (isProcessing()) {
+        <div class="flex flex-col items-center justify-center p-8">
+            <mat-spinner [diameter]="40" color="warn"></mat-spinner>
+            <p class="mt-4 text-gray-600">Usuwanie: {{ data.translationPl }}...</p>
+        </div>
+      } @else {
+        <p>Czy na pewno chcesz usunąć słówko:</p>
+        <p class="font-bold">"{{ data.wordPhraseEn }}" / "{{ data.translationPl }}"</p>
+        <p class="text-sm text-red-600"> Tej operacji nie będzie można cofnąć.</p>
+      }
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <!-- Przycisk Anuluj: zamyka dialog zwracając 'false' -->
+      <button mat-button 
+              (click)="dialogRef.close(false)" 
+              [disabled]="isProcessing()" 
+              cdkFocusInitial>
+        Anuluj
+      </button>
+      
+      <!-- Przycisk Usuń: wywołuje asynchroniczne usuwanie -->
+      <button mat-flat-button 
+              color="warn" 
+              (click)="confirmDelete()" 
+              [disabled]="isProcessing()">
+        <mat-icon>delete</mat-icon> 
+        Usuń
+      </button>
+    </div>
