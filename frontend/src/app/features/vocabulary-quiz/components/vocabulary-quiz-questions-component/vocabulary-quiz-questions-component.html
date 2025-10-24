@@ -1,0 +1,53 @@
+<div class="quiz-container">
+      
+      <!-- Panel Statystyk Górny (Licznik i Czas) -->
+      <div class="stats-panel">
+          <div class="stats-counter">
+              Słowo: <span class="counter-value">{{ currentIndex() + 1 }} / {{ totalWords() }}</span>
+          </div>
+          <div class="stats-timer">
+              <svg class="timer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              Czas: <span class="timer-value">{{ formattedTime() }}</span>
+          </div>
+      </div>
+
+      @if (currentWord()) {
+        <!-- Karta Pytania -->
+        <div class="question-card-new">
+          <p class="question-instruction">Przetłumacz na polski:</p>
+          <div class="question-text-new">
+            {{ currentWord()!.questions[0].wordPhraseEn }}
+          </div>
+        </div>
+        
+        <!-- Pole Input -->
+        <div class="input-wrapper">
+          <input
+            type="text"
+            [(ngModel)]="userAnswer"
+            (keydown.enter)="checkAnswer()"
+            placeholder="Wpisz tłumaczenie tutaj..."
+            class="answer-input"
+            [disabled]="isChecking()"
+          />
+        </div>
+
+        <!-- Przyciski -->
+        <div class="button-group">
+          <button
+            (click)="checkAnswer()"
+            [disabled]="!userAnswer.trim() || isChecking()"
+            class="btn-check-new"
+          >
+            Sprawdź
+          </button>
+          
+          <button
+            (click)="cancelQuiz.emit(true)"
+            class="btn-cancel"
+          >
+            Zakończ i Zapisz
+          </button>
+        </div>
+      }
+    </div>
