@@ -1,0 +1,77 @@
+ <div class="summary-page-container">
+            <div class="summary-card-container">
+                
+                @if (isLoading()) {
+                    <div class="loader-container">
+                        <div class="spinner mb-4"></div>
+                        <p class="loader-text-main">Pobieranie Podsumowania...</p>
+                        <p class="loader-text-detail">UUID: {{ quizUuid() }}</p>
+                    </div>
+                } @else if (summary()) {
+                    <header class="summary-header">
+                        <h1 class="summary-title">Szczegółowe Podsumowanie Quizu</h1>
+                        <!-- Użycie klasy CSS dla szczegółów UUID -->
+                        <p class="summary-uuid-detail">UUID: {{ summary()!.quizUuid }}</p>
+                    </header>
+                    
+                    <!-- NOWA SEKCJA WYNIKÓW -->
+                    <div class="quiz-completed-box">
+                        <h2 class="score-box-title">Quiz Zakończony!</h2>
+                        <p class="summary-score-text">Twój wynik: <span class="score-percent">{{ summary()!.accuracyPercent | number:'1.2-2' }}%</span></p>
+                        <p class="summary-score-details">({{ summary()!.scoreCorrect }} poprawnych / {{ summary()!.scoreTotal }} wszystkich)</p>
+                        <p class="summary-time-info">Całkowity czas: <span class="time-info-value">{{ formattedTime() }}</span></p>
+                    </div>
+
+                    <h2 class="section-title">Szczegółowe Odpowiedzi</h2>
+                    
+                    <div class="table-wrapper">
+                        <table class="summary-result-table">
+                            <thead>
+                                <tr>
+                                    <th class="summary-header-cell rounded-tl-lg">Słówko Angielskie</th>
+                                    <th class="summary-header-cell">Twoja Odpowiedź</th>
+                                    <th class="summary-header-cell">Poprawna Odpowiedź</th>
+                                    <th class="summary-header-cell text-center rounded-tr-lg">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (result of summary()!.itemResults; track result.entryId) {
+                                    <tr class="summary-row">
+                                        <td class="summary-cell word-phrase">{{ result.wordPhraseEn }}</td>
+                                        <td 
+                                            class="summary-cell" 
+                                            [ngClass]="{'user-answer-correct': result.isCorrect, 'user-answer-incorrect': !result.isCorrect}"
+                                        >
+                                            {{ result.userAnswer || '(Brak odpowiedzi)' }}
+                                        </td>
+                                        <td class="summary-cell correct-answer-text">{{ result.correctAnswer }}</td>
+                                        <td class="summary-cell text-center">
+                                            <!-- Użycie bloku @if i customowych klas -->
+                                            @if (result.isCorrect) {
+                                                <span class="status-badge status-badge-ok">Poprawne</span>
+                                            } @else {
+                                                <span class="status-badge status-badge-error">Niepoprawne</span>
+                                            }
+                                        </td>
+                                    </tr> 
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="summary-footer">
+                        <button 
+                            (click)="startNewQuiz.emit()"
+                            class="new-quiz-button"
+                        >
+                            Rozpocznij Nowy Quiz
+                        </button>
+                    </div>
+                } @else {
+                    <div class="summary-error-box">
+                        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <p>Nie udało się załadować podsumowania dla UUID: <span class="error-uuid-code">{{ quizUuid() }}</span></p>
+                    </div>
+                }
+            </div>
+        </div>

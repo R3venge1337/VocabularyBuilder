@@ -1,0 +1,258 @@
+.summary-page-container {
+            font-family: 'Inter', sans-serif;
+            padding: 1.5rem; /* p-6 */
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start; /* items-start */
+            justify-content: center;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .summary-card-container {
+            width: 100%;
+            max-width: 1024px; /* lg:max-w-4xl */
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        /* HEADER AND TITLE */
+        .summary-header {
+            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .summary-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 800; /* font-extrabold */
+            color: #4338ca; /* indigo-700 */
+        }
+        .summary-uuid-detail { /* ZAMIENNIK DLA text-sm text-gray-500 mt-2 truncate */
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* LOADER / ERROR */
+        .loader-container {
+            text-align: center;
+            padding: 3rem;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #6366f1; /* indigo-500 */
+            border-radius: 50%;
+            width: 4rem;
+            height: 4rem;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        .loader-text-main { /* ZAMIENNIK DLA text-xl font-semibold text-gray-700 */
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        .loader-text-detail { /* ZAMIENNIK DLA text-sm text-gray-500 mt-1 truncate */
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .summary-error-box {
+            padding: 2rem;
+            text-align: center;
+            color: #dc2626;
+            background-color: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        /* NOWA KLASA DLA KODU UUID BŁĘDU */
+        .error-uuid-code { /* ZAMIENNIK DLA font-mono text-xs */
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.75rem;
+        }
+
+        /* QUIZ SCORE BOX */
+        .quiz-completed-box {
+            background-color: #ecfdf5; /* green-50 */
+            border: 2px solid #34d399; /* green-400 */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        /* POPRAWIONA KLASA */
+        .score-box-title { /* ZAMIENNIK DLA text-2xl font-bold text-green-700 */
+            font-size: 1.5rem; /* text-2xl jest 1.5rem na desktop, 1.25rem na mobile */
+            font-weight: 700;
+            color: #047857; /* green-700 */
+            margin-bottom: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .score-box-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        .summary-score-text {
+            font-size: 1.25rem; /* text-xl */
+            color: #1f2937; /* gray-800 */
+            margin-top: 0.5rem;
+        }
+        .summary-score-details {
+            font-size: 1rem;
+            color: #6b7280; /* gray-600 */
+        }
+        .summary-time-info {
+            font-size: 1rem;
+            color: #4b5563;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        .score-percent {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #059669; /* green-600 */
+            margin-left: 0.5rem;
+        }
+        .time-info-value {
+            color: #10b981; /* green-500 */
+        }
+        
+        /* SECTION TITLE */
+        .section-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* gray-800 */
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #d1d5db; /* border-b */
+            padding-bottom: 0.5rem;
+        }
+
+        /* TABLE STYLES */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        .summary-result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .summary-header-cell {
+            padding: 0.75rem 1rem; /* Zamiast py-3 px-4 */
+            text-align: left;
+            background-color: #4f46e5; /* indigo-600 */
+            color: #ffffff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-row:hover {
+            background-color: #f9fafb; /* hover:bg-gray-50 */
+        }
+        .summary-cell {
+            padding: 0.75rem 1rem; /* Zamiast py-3 px-4 */
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* ANSWER STYLES */
+        .word-phrase {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .correct-answer-text {
+            color: #059669; /* green-600 */
+            font-weight: 500;
+        }
+        .user-answer-correct {
+            font-weight: 600;
+            color: #059669; /* green-600 */
+        }
+        .user-answer-incorrect {
+            font-weight: 600;
+            color: #dc2626; /* red-600 */
+            text-decoration: line-through;
+        }
+
+        /* STATUS BADGES */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px; /* full rounded */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-badge-ok {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+        }
+        .status-badge-error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+
+        /* FOOTER BUTTON */
+        .summary-footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        .new-quiz-button {
+            background-color: #10b981; /* emerald-500 */
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+        }
+        .new-quiz-button:hover {
+            background-color: #059669; /* emerald-600 */
+            transform: translateY(-1px);
+        }
+        .new-quiz-button:active {
+            transform: translateY(1px);
+        }
+
+        /* RESPONSIVE TABLE */
+        @media (max-width: 768px) {
+            .summary-page-container {
+                padding: 0.5rem;
+            }
+            .summary-card-container {
+                padding: 1rem;
+            }
+            .summary-result-table {
+                font-size: 0.75rem;
+            }
+            .summary-header-cell, .summary-cell {
+                padding: 0.5rem 0.75rem;
+            }
+            .summary-title {
+                font-size: 1.5rem;
+            }
+        }

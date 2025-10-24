@@ -29,9 +29,8 @@ class VocabularyQuizController {
 
     @GetMapping(ControllerPaths.Quiz.GENERATE)
     public QuizDto generateQuiz(
-            @RequestParam(defaultValue = QUIZ_WORDS_NR) final int count,
-            @RequestParam(required = false) final List<ContextSource> contextSources) {
-        return quizService.generateQuizWords(count, contextSources);
+            @RequestParam(defaultValue = QUIZ_WORDS_NR) final int count) {
+        return quizService.generateQuizWords(count);
     }
 
     @PostMapping(ControllerPaths.Quiz.SUBMIT)

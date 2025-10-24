@@ -56,4 +56,8 @@ export class VocabularyService {
     return this.http.delete(`${this.API_URL}/vocabulary/${id}`);
   }
 
+  countEntry(): Observable<any> {
+    return this.http.get(`${this.API_URL}/vocabulary/count`);
+  }
+
 }

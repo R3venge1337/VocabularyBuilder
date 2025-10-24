@@ -37,6 +37,11 @@ class VocabularyEntryService implements VocabularyEntryFacade {
     }
 
     @Override
+    public long countEntry() {
+        return repository.count();
+    }
+
+    @Override
     @Transactional
     public VocabularyEntryView createEntry(final CreateVocabularyEntryForm form) {
 

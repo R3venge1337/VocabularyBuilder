@@ -33,4 +33,6 @@ public interface VocabularyEntryRepository extends JpaRepository<VocabularyEntry
     List<VocabularyEntry> findRandomRemaining(@Param("usedIds") List<Long> usedIds,
                                               @Param("contextSources") List<ContextSource> contextSources,
                                               Pageable pageable);
+    @Query("SELECT COUNT(*) FROM VocabularyEntry")
+    long count();
 }
