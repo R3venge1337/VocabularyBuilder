@@ -18,5 +18,7 @@ public interface VocabularyEntryFacade {
 
     PageDto<VocabularyEntryView> findVocabularyEntries(final FilterVocabularyEntryForm filterForm, final PageableRequest pageableRequest);
 
+    long countEntry();
+
 
 }

@@ -53,4 +53,9 @@ class VocabularyEntryController {
     public void deleteEntry(@PathVariable final Long id) {
         entryFacade.deleteEntry(id);
     }
+
+    @GetMapping(ControllerPaths.ENTRY_BASE + "/count")
+    public long getEntryCount() {
+        return entryFacade.countEntry();
+    }
 }
