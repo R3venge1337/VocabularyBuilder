@@ -4,8 +4,8 @@ public class ControllerPaths {
 
     // Ścieżki Bazowe Kontrolerów
     public static final String ENTRY_BASE = "/vocabulary";
-    public static final String QUIZ_BASE = " /quizzes";
-    public static final String TICTACTOE_BASE = " /games";
+    public static final String QUIZ_BASE = "/quizzes";
+    public static final String TICTACTOE_BASE = "/games";
 
     // Szczegółowe Ścieżki Quizów
     public static final class Quiz {
