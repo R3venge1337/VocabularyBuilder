@@ -21,8 +21,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -31,13 +33,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VocabularyQuizService implements VocabularyQuizFacade {
 
+    public static final List<ContextSource> DEFAULT_CONTEXTS = List.of(ContextSource.BOOK, ContextSource.MOVIE, ContextSource.SERIES, ContextSource.
+            DICTIONARY, ContextSource.WEBSITE, ContextSource.COURSE, ContextSource.CONVERSATION, ContextSource.GENERAL);
     private final VocabularyQuizRepository quizRepository;
     private final VocabularyQuizItemRepository quizItemRepository;
     private final VocabularyEntryRepository entryRepository;
 
     @Override
     @Transactional
-    public QuizDto generateQuizWords(final int count, final List<ContextSource> contextSources) {
+    public QuizDto generateQuizWords(final int count) {
         List<VocabularyEntry> quizEntries = new ArrayList<>();
         int remainingCount = count;
 
@@ -66,7 +70,7 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
 
             List<VocabularyEntry> candidates = entryRepository.findRandomCandidates(
                     status,
-                    contextSources.isEmpty() ? null : contextSources, // Przekazanie listy kontekstów
+                    DEFAULT_CONTEXTS, // Przekazanie listy kontekstów
                     pageable
             );
 
@@ -90,11 +94,9 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
             // Wyszukanie słówek, których ID jeszcze nie użyto
             List<VocabularyEntry> otherCandidates = entryRepository.findRandomRemaining(
                     usedEntryIds,
-                    contextSources.isEmpty() ? null : contextSources,
+                    DEFAULT_CONTEXTS,
                     pageable
             );
-
-            Collections.shuffle(otherCandidates);
 
             for (VocabularyEntry candidate : otherCandidates) {
                 if (remainingCount <= 0) break;
@@ -106,14 +108,14 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
         }
 
         // Krok 3: MAPOWANIE NA DTO
-        List<QuizQuestionDto> questions = quizEntries.stream()
+        List<QuizQuestionDto> questions = new ArrayList<>(quizEntries.stream()
                 .map(entry -> new QuizQuestionDto(
                         entry.getId(),
                         entry.getWordPhraseEn(),
                         entry.getTranslationPl(),
                         entry.getPartOfSpeech()
                 ))
-                .toList();
+                .toList());
 
         // Finalne mieszanie dla większej losowości w całej puli pytań
         Collections.shuffle(questions);
@@ -151,8 +153,8 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
 
         // Tworzymy główną encję quizu
         VocabularyQuiz quiz = createVocabularyQuizEntity(resultsDto);
-
-        final List<VocabularyQuizItem> quizItems = new ArrayList<>();
+        quiz = quizRepository.save(quiz);
+        Set<VocabularyQuizItem> quizItems = new HashSet<>();
 
         // Krok 2: Iteracja, weryfikacja odpowiedzi i aktualizacja postępu
         for (QuizItemResultDto itemResult : resultsDto.results()) {
@@ -163,7 +165,19 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
                 // To nie powinno się zdarzyć, ale warto to obsłużyć (np. throw ResourceNotFoundException)
                 continue;
             }
-            correctCount = processSingleItem(itemResult, entry, correctCount, quiz, quizItems);
+
+            // Logika weryfikacji: normalizacja i porównanie
+            String userAnswer = itemResult.userAnswer() != null ? itemResult.userAnswer().trim().toLowerCase() : "";
+            String correctAnswer = entry.getTranslationPl().trim().toLowerCase();
+
+            boolean wasCorrect = !userAnswer.isBlank() && userAnswer.equals(correctAnswer);
+
+            if (wasCorrect) {
+                correctCount++;
+            }
+            VocabularyQuizItem quizItem = createVocabularyQuizItem(itemResult, quiz, entry, wasCorrect);
+            quizItems.add(quizItemRepository.save(quizItem));
+            updateMasteryStatus(entry, wasCorrect);
         }
 
         // Krok 5: Finalizacja i Zapis głównej encji Quizu
@@ -171,38 +185,19 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
 
         quiz.setScoreCorrect(correctCount);
         quiz.setScoreTotal(totalCount);
-        quiz.setAccuracyPercent(BigDecimal.valueOf(Math.round(accuracy * 100.0) / 100.0)); // Zaokrąglenie do 2 miejsc po przecinku
-
-        // Zapis quizu i wszystkich jego elementów (przy założeniu kaskadowego zapisu lub osobnej repozytorium dla QuizItem)
+        quiz.setAccuracyPercent(BigDecimal.valueOf(Math.round(accuracy * 100.0) / 100.0));// Zaokrąglenie do 2 miejsc po przecinku
+        quiz.setQuizItems(quizItems);
         return mapQuizViewDto(quizRepository.save(quiz));
     }
 
-    private int processSingleItem(final QuizItemResultDto itemResult, final VocabularyEntry entry, int correctCount, final VocabularyQuiz quiz, final List<VocabularyQuizItem> quizItems) {
-        // Logika weryfikacji: normalizacja i porównanie
-        String userAnswer = itemResult.userAnswer() != null ? itemResult.userAnswer().trim().toLowerCase() : "";
-        String correctAnswer = entry.getTranslationPl().trim().toLowerCase();
-
-        boolean wasCorrect = !userAnswer.isBlank() && userAnswer.equals(correctAnswer);
-
-        if (wasCorrect) {
-            correctCount++;
-        }
-
-        // Krok 3: Zapis szczegółów pytania (Quiz Item)
-        createVocabularyQuizItem(itemResult, quiz, entry, wasCorrect, quizItems);
-
-        updateMasteryStatus(entry, wasCorrect);
-        return correctCount;
-    }
-
-    private static void createVocabularyQuizItem(final QuizItemResultDto itemResult, final VocabularyQuiz quiz, final VocabularyEntry entry, boolean wasCorrect, final List<VocabularyQuizItem> quizItems) {
+    private  VocabularyQuizItem createVocabularyQuizItem(final QuizItemResultDto itemResult, final VocabularyQuiz quiz, final VocabularyEntry entry, boolean wasCorrect) {
         VocabularyQuizItem quizItem = new VocabularyQuizItem();
         quizItem.setVocabularyQuiz(quiz); // Ustawienie relacji
         quizItem.setVocabularyEntry(entry);
         quizItem.setIsCorrect(wasCorrect);
         quizItem.setUserAnswer(itemResult.userAnswer()); // Zapisujemy oryginalną odpowiedź
         quizItem.setCorrectAnswer(entry.getTranslationPl());
-        quizItems.add(quizItem);
+        return quizItem;
     }
 
     private static VocabularyQuiz createVocabularyQuizEntity(final QuizResultsDto results) {
@@ -210,6 +205,9 @@ public class VocabularyQuizService implements VocabularyQuizFacade {
         quiz.setQuizUuid(results.quizUuid());
         quiz.setDurationSeconds(results.durationSeconds());
         quiz.setDateCompleted(LocalDateTime.now());
+        quiz.setScoreCorrect(0);
+        quiz.setAccuracyPercent(BigDecimal.valueOf(0));
+        quiz.setScoreTotal(0);
         return quiz;
     }
 

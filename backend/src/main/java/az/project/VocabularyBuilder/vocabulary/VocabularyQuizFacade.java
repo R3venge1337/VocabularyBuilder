@@ -1,6 +1,5 @@
 package az.project.VocabularyBuilder.vocabulary;
 
-import az.project.VocabularyBuilder.vocabulary.domain.ContextSource;
 import az.project.VocabularyBuilder.vocabulary.dto.QuizDto;
 import az.project.VocabularyBuilder.vocabulary.dto.QuizHistoryDto;
 import az.project.VocabularyBuilder.vocabulary.dto.QuizResultsDto;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 public interface VocabularyQuizFacade {
 
-    QuizDto generateQuizWords(final int count, final List<ContextSource> contextSources);
+    QuizDto generateQuizWords(final int count);
 
     QuizViewDto getQuizByUuid(final UUID quizUuid);
 
