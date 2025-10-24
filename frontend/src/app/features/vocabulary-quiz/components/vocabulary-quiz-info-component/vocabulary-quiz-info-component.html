@@ -1,0 +1,44 @@
+<h2 class="section-title">Informacje o Quizie</h2>
+            
+    <div class="info-box">
+        <p class="info-title">Jak to działa?</p>
+        <ul class="info-list">
+            <li>Wpisz, ile słów (od 1 do {{ maxWords() }}) ma zawierać quiz.</li>
+            <li>Stan Twojego quizu jest automatycznie zapisywany w bazie danych.</li>
+            <li>Możesz wznowić ostatni, nieukończony quiz w dowolnym momencie.</li>
+        </ul>
+    </div>
+
+
+    <!-- Formularz wyboru długości quizu -->
+    <div class="input-form-container">
+        <label for="wordCount" class="input-label">
+            Liczba słów do wygenerowania (max: {{  maxWords() }}):
+        </label>
+        
+        <input
+            id="wordCount"
+            type="number"
+            min="1"
+            [max]="maxWords()"
+            [(ngModel)]="quizLength"
+            (ngModelChange)="onLengthChange($event)"
+            placeholder="np. 20"
+            class="quiz-input"
+        />
+
+        <button
+            (click)="startNewQuiz.emit(quizLength)"
+            [disabled]="!isInputValid()"
+            class="btn-primary"
+        >
+            Wygeneruj Nowy Quiz
+        </button>
+        
+        @if (!isInputValid() && quizLength !== null && quizLength !== 0) {
+        <p class="error-message">
+            Wprowadź liczbę od 1 do {{ maxWords() }}.
+        </p>
+        }
+       
+    </div>
