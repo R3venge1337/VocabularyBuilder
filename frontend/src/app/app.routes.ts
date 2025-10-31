@@ -13,6 +13,10 @@ export const routes: Routes = [
         path: 'quiz',
         loadComponent: () => import('./features/vocabulary-quiz/pages/vocabluary-quiz-page/vocabluary-quiz-page').then(m => m.VocabluaryQuizPage)
     },
+    {
+        path: 'tictactoe',
+        loadComponent: () => import('./features/tic-tac-toe/pages/tictactoe-page/tictactoe-page').then(m => m.TictactoePage)
+    },
     { 
         path: '', 
         redirectTo: 'home', 
