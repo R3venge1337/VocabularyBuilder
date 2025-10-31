@@ -9,6 +9,8 @@ public record GameStateDto(
         String[][] board,
         String nextPlayer,
         GameResult result, // Null, jeśli gra trwa
-        String message
+        String message,
+        String winningSide,
+        String wonCoordinates
 ) {
 }

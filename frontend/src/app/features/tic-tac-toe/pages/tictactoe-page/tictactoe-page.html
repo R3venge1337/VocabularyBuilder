@@ -1,0 +1,7 @@
+<app-tictactoe-component
+        [gameState]="gameState()"
+        [isLoading]="isLoading()"
+        [errorMsg]="errorMsg()"
+        (gameStarted)="startGame()"
+        (moveRequested)="makeMove($event)"
+></app-tictactoe-component>
