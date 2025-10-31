@@ -10,6 +10,8 @@ import az.project.VocabularyBuilder.tictactoe.dto.GameMoveDto;
 import az.project.VocabularyBuilder.tictactoe.dto.GameReplayDto;
 import az.project.VocabularyBuilder.tictactoe.dto.GameStateDto;
 import az.project.VocabularyBuilder.tictactoe.dto.MoveRequestDto;
+import az.project.VocabularyBuilder.tictactoe.dto.WinCheckResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,6 +21,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TicTacToeService implements TicTacToeFacade {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final GameSessionRepository gameSessionRepository;
 
@@ -47,7 +52,7 @@ public class TicTacToeService implements TicTacToeFacade {
         GameSide playerSide = Math.random() < 0.5 ? GameSide.X : GameSide.O;
         GameSide startingSide = GameSide.X;
 
-        GameSessionState state = new GameSessionState(gameId, playerSide, startingSide);
+        GameSessionState state = new GameSessionState(gameId, playerSide, startingSide,null,null);
         activeGames.put(gameId, state);
 
         String message = playerSide == startingSide ?
@@ -76,6 +81,8 @@ public class TicTacToeService implements TicTacToeFacade {
         GameSide playerSide = state.getPlayerSide();
         GameSide aiSide = playerSide == GameSide.X ? GameSide.O : GameSide.X;
         GameResult finalResult = null;
+        GameSide wonSide = null;
+        String wonCoordinates = null;
         String message = "";
 
         // 1. Walidacja ruchu gracza
@@ -88,13 +95,18 @@ public class TicTacToeService implements TicTacToeFacade {
         int playerMoveNumber = state.getCurrentMoves().size() + 1;
         state.getCurrentMoves().add(new GameMove(null, playerMoveNumber, playerSide, request.row(), request.col()));
 
+       WinCheckResult playerSideChecked = checkWinCondition(state.getBoard(), playerSide);
         // 3. Sprawdzenie warunków po ruchu gracza
-        if (checkWinCondition(state.getBoard(), playerSide)) {
+        if (playerSideChecked.isWin()) {
             finalResult = GameResult.WIN;
+            wonSide = playerSideChecked.winningSide();
+            wonCoordinates = mapWonCoordinatesToJson(playerSideChecked.winningCoordinates());
             message = "Gratulacje! Wygrałeś!";
         } else if (isBoardFull(state.getBoard())) {
             finalResult = GameResult.DRAW;
             message = "Remis! Plansza pełna.";
+            wonSide = null;
+            wonCoordinates = null;
         }
 
         // 4. Jeśli gra trwa, wykonaj ruch AI
@@ -102,19 +114,25 @@ public class TicTacToeService implements TicTacToeFacade {
 
             // Logika ruchu AI
             makeAIMove(state);
-
+            WinCheckResult aiSideChecked = checkWinCondition(state.getBoard(), aiSide);
             // Sprawdzenie warunków po ruchu AI
-            if (checkWinCondition(state.getBoard(), aiSide)) {
+            if (aiSideChecked.isWin()) {
                 finalResult = GameResult.LOSE;
+                wonSide = aiSideChecked.winningSide();
+                wonCoordinates = mapWonCoordinatesToJson(aiSideChecked.winningCoordinates());
                 message = "Przegrana. Komputer wygrał!";
             } else if (isBoardFull(state.getBoard())) {
                 finalResult = GameResult.DRAW;
                 message = "Remis! Plansza pełna.";
+                wonSide = null;
+                wonCoordinates = null;
+
             } else {
                 message = "Ruch komputera. Twój ruch (" + playerSide.name() + ").";
             }
         }
-
+        state.setWinningSide(wonSide);
+        state.setWonCoordinates(wonCoordinates);
         // 5. Finalizacja (jeśli wynik jest określony)
         if (finalResult != null) {
             finalizeAndSaveGame(state, finalResult);
@@ -180,12 +198,16 @@ public class TicTacToeService implements TicTacToeFacade {
     }
 
     private GameStateDto mapToGameStateDto(GameSessionState state, GameResult result, String message) {
+        String nextPlayerName = state.getNextTurn() != null ? state.getNextTurn().name() : null;
+        String winningSide = state.getWinningSide() != null ? state.getWinningSide().name() : null;
         return new GameStateDto(
                 state.getGameId(),
                 state.getBoard(),
-                state.getNextTurn().name(),
+                nextPlayerName,
                 result, // Będzie null, jeśli gra trwa
-                message
+                message,
+                winningSide,
+                state.getWonCoordinates()
         );
     }
 
@@ -231,24 +253,59 @@ public class TicTacToeService implements TicTacToeFacade {
         return true;
     }
 
-    private boolean checkWinCondition(String[][] board, GameSide side) {
+    public WinCheckResult checkWinCondition(String[][] board, GameSide side) {
         String s = side.name();
+
+        // Lista do przechowywania koordynatów zwycięskiej linii
+        List<int[]> coords;
 
         // 1. Sprawdzenie wierszy i kolumn
         for (int i = 0; i < 3; i++) {
             // Wiersze
-            if (s.equals(board[i][0]) && s.equals(board[i][1]) && s.equals(board[i][2])) return true;
+            if (s.equals(board[i][0]) && s.equals(board[i][1]) && s.equals(board[i][2])) {
+                coords = Arrays.asList(
+                        new int[]{i, 0},
+                        new int[]{i, 1},
+                        new int[]{i, 2}
+                );
+                return new WinCheckResult(true,side, coords);
+            }
+
             // Kolumny
-            if (s.equals(board[0][i]) && s.equals(board[1][i]) && s.equals(board[2][i])) return true;
+            if (s.equals(board[0][i]) && s.equals(board[1][i]) && s.equals(board[2][i])) {
+                coords = Arrays.asList(
+                        new int[]{0, i},
+                        new int[]{1, i},
+                        new int[]{2, i}
+                );
+                return new WinCheckResult(true, side, coords);
+            }
         }
 
         // 2. Sprawdzenie przekątnych
-        // Główna przekątna (0,0 -> 2,2)
-        if (s.equals(board[0][0]) && s.equals(board[1][1]) && s.equals(board[2][2])) return true;
-        // Antyprzekątna (0,2 -> 2,0)
-        if (s.equals(board[0][2]) && s.equals(board[1][1]) && s.equals(board[2][0])) return true;
 
-        return false;
+        // Główna przekątna (0,0 -> 2,2)
+        if (s.equals(board[0][0]) && s.equals(board[1][1]) && s.equals(board[2][2])) {
+            coords = Arrays.asList(
+                    new int[]{0, 0},
+                    new int[]{1, 1},
+                    new int[]{2, 2}
+            );
+            return new WinCheckResult(true, side, coords);
+        }
+
+        // Antyprzekątna (0,2 -> 2,0)
+        if (s.equals(board[0][2]) && s.equals(board[1][1]) && s.equals(board[2][0])) {
+            coords = Arrays.asList(
+                    new int[]{0, 2},
+                    new int[]{1, 1},
+                    new int[]{2, 0}
+            );
+            return new WinCheckResult(true,side, coords);
+        }
+
+        // Brak wygranej
+        return new WinCheckResult(false, null,null);
     }
 
     private void validateMove(GameSessionState state, int row, int col) {
@@ -312,6 +369,8 @@ public class TicTacToeService implements TicTacToeFacade {
         session.setMovesCount(state.getCurrentMoves().size());
         session.setDatePlayed(LocalDateTime.now());
         session.setDurationSeconds((int) durationSeconds);
+        session.setWinningSide(state.getWinningSide());
+        session.setWonCoordinates(state.getWonCoordinates());
 
         // 2. Dołącz listę ruchów (ustawienie relacji)
         state.getCurrentMoves().forEach(move -> {
@@ -325,5 +384,41 @@ public class TicTacToeService implements TicTacToeFacade {
         // 4. Usuń sesję z pamięci RAM
         activeGames.remove(state.getGameId());
     }
+
+    public String mapWonCoordinatesToJson(List<int[]> wonCoordinates) {
+        if (wonCoordinates == null || wonCoordinates.isEmpty()) {
+            return null;
+        }
+
+        try {
+            // ObjectMapper konwertuje Java List<int[]> na JSON String
+            // np. [[0,0],[1,1],[2,2]]
+            return objectMapper.writeValueAsString(wonCoordinates);
+        } catch (Exception e) {
+            // W przypadku błędu serializacji (np. problem z pamięcią)
+            System.err.println("Błąd serializacji koordynatów do JSON: " + e.getMessage());
+            // Można rzucić wyjątek biznesowy lub zwrócić null, w zależności od wymagań aplikacji
+            return null;
+        }
+    }
+
+    /**
+     * Opcjonalnie: Metoda do konwersji Stringa JSON z powrotem na List<int[]>.
+     * Przydatne przy wczytywaniu danych z bazy.
+     */
+    public List<int[]> mapJsonToWonCoordinates(String jsonCoordinates) {
+        if (jsonCoordinates == null || jsonCoordinates.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            // Wymaga Jackson TypeReference do poprawnej deserializacji generycznych typów
+            return objectMapper.readValue(jsonCoordinates, new com.fasterxml.jackson.core.type.TypeReference<List<int[]>>() {});
+        } catch (Exception e) {
+            System.err.println("Błąd deserializacji JSON do koordynatów: " + e.getMessage());
+            return null;
+        }
+    }
+
 }
 
