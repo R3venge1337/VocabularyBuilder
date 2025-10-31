@@ -17,15 +17,19 @@ public class GameSessionState {
     private Instant lastMoveTimestamp;
     private final List<GameMove> currentMoves; // Lista ruchów do utrwalenia na koniec
     private GameSide nextTurn;
+    private GameSide winningSide;
+    private String wonCoordinates;
 
     // Używamy String dla planszy (X, O, null) dla prostoty, mapując GameSide na String
-    public GameSessionState(UUID gameId, GameSide playerSide, GameSide startingSide) {
+    public GameSessionState(UUID gameId, GameSide playerSide, GameSide startingSide, GameSide winningSide, String wonCoordinates) {
         this.gameId = gameId;
         this.playerSide = playerSide;
         this.board = new String[3][3]; // Inicjalizacja pustej planszy (domyślnie null)
         this.lastMoveTimestamp = Instant.now();
         this.currentMoves = new ArrayList<>();
         this.nextTurn = startingSide;
+        this.winningSide = winningSide;
+        this.wonCoordinates = wonCoordinates;
     }
 
     public void updateTimestamp() {

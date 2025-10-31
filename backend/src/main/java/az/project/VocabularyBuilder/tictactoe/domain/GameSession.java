@@ -56,6 +56,13 @@ class GameSession extends AbstractEntityId {
     @Column(name = "duration_seconds", nullable = false)
     private Integer durationSeconds;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "winning_side", length = 1)
+    private GameSide winningSide;
+
+    @Column(name = "won_coordinates", columnDefinition = "TEXT")
+    private String wonCoordinates;
+
     // Relacja One-to-Many: Zapis kaskadowy ruchów
     @OneToMany(mappedBy = "gameSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GameMove> moves = new ArrayList<>();
