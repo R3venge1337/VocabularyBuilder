@@ -1,0 +1,76 @@
+ <div class="game-wrapper">
+   <div class="game-card">
+        <h1 class="title">
+                Gra Kółko i Krzyżyk
+        </h1>
+
+         <!-- Sekcja Statusu Gry -->
+        <div class="status-section">
+                <p class="player-info">
+                    Twój symbol: 
+                <span [class]="gameState().nextPlayer === 'X' ? 'player-symbol-x' : 'player-symbol-o'">
+                    {{ gameState().nextPlayer || '...' }}
+                </span>
+            </p>
+        <div class="message-box" [class]="isGameOver() ? 'message-game-over' : 'message-active'">
+                <p>
+                {{ gameState().message }}
+                </p>
+            </div>
+        </div>
+            <!-- Przycisk Start/Restart -->
+        <button 
+            (click)="gameStarted.emit()"
+            [disabled]="isLoading()"
+            class="start-button">
+            @if (isLoading()) {
+                <!-- Używamy prostego SVG do animacji ładowania -->
+            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
+            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style="opacity: 0.75;"></path>
+            </svg>
+         Ładowanie...
+     } @else {
+     Rozpocznij Nową Grę
+    }
+</button>
+
+ @if (gameState().gameId) {
+    <!-- Plansza Gry -->
+                <div class="board-container">
+
+                    <!-- Linia zwycięstwa (nakładka) -->
+                    <div class="win-line-overlay" [class]="'win-line-overlay ' + winLineClass()">
+                        <div class="win-line" [class.active]="gameState().result === 'WIN' || gameState().result === 'LOSE'"></div>
+                    </div>
+
+                    <div class="board-grid">
+                        @for (row of gameState().board; track $index; let r = $index) {
+                            @for (cell of row; track $index; let c = $index) {
+                                <div
+                                    (click)="handleCellClick(r, c)"
+                                    [ngClass]="{
+                                        'cell-x': cell === 'X',
+                                        'cell-o': cell === 'O',
+                                        'cell-occupied': !!cell,
+                                        'cell-win-line': isCellInWinLine(r, c),
+                                        'cell-disabled-visuals': isGameOver() && !isCellInWinLine(r, c), 
+                                        'cell-disabled-click': isGameOver() || !!cell
+                                    }"
+                                    class="cell"
+                                >
+                                    {{ cell }}
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+    }
+    @if (errorMsg()) {
+    <div class="error-message">
+        <p>Błąd:</p>
+        <p>{{ errorMsg() }}</p>
+     </div>
+     }
+</div>
+</div>

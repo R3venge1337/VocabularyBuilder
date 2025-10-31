@@ -1,0 +1,256 @@
+    .game-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+   .game-card {
+            width: 100%;
+            max-width: 24rem; /* max-w-sm */
+            background-color: #ffffff;
+            padding: 2.5rem 1.5rem; /* p-6 md:p-10 */
+            border-radius: 1.5rem; /* rounded-3xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* shadow-2xl */
+        }
+
+        .title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 800; /* font-extrabold */
+            color: #4f46e5; /* text-indigo-700 */
+            text-align: center;
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        /* Sekcja Statusu Gry */
+        .status-section {
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding: 1rem; /* p-4 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+            background-color: #eef2ff; /* bg-indigo-50 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-info {
+            font-size: 1.125rem; /* text-md */
+            font-weight: 600; /* font-medium */
+            color: #4b5563; /* text-gray-700 */
+            margin-bottom: 0.5rem; /* mb- */
+        }
+
+        .player-symbol {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            margin-left: 0.5rem; /* ml-2 */
+        }
+
+        .player-symbol-x {
+            color: #dc2626;/* text-red-600 (dla X) */
+            font-size: 1.7rem; 
+        }
+        .player-symbol-o {
+            color: #2563eb; /* text-blue-600 (dla O) */
+            font-size: 1.7rem;
+        }
+
+     .message-box {
+      font-size: 1.25rem; /* Tailwind text-xl */
+      font-weight: 700; /* Tailwind font-bold */
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem; /* Tailwind rounded-lg */
+    }
+
+    .message-game-over {
+      background-color: #fecaca; /* Tailwind red-200 */
+      color: #b91c1c; /* Tailwind red-700 */
+      animation: pulse 1.5s infinite;
+    }
+    
+    .message-game-over p {
+      animation: bounce 1s infinite;
+    }
+
+      @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+
+       @keyframes bounce {
+      0%, 100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+      }
+      50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      }
+    }
+
+        /* Przycisk Start/Restart */
+        .start-button {
+            width: 100%;
+            padding: 0.75rem 0; /* py-3 */
+            margin-bottom: 2rem; /* mb-8 */
+            border-radius: 0.75rem; /* rounded-xl */
+            font-weight: 700; /* font-bold */
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            background-color: #10b981; /* bg-green-600 */
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+        }
+        .start-button:hover {
+            background-color: #059669; /* hover:bg-green-700 */
+        }
+        .start-button:active {
+            transform: scale(0.99);
+        }
+
+        /* Plansza Gry */
+        .board-container {
+            position: relative;
+        }
+
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem; /* gap-2 */
+            background-color: #a5b4fc; /* bg-indigo-300 */
+            padding: 0.5rem; /* p-2 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+        }
+
+        .cell {
+            aspect-ratio: 1 / 1;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: transform 0.15s, opacity 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); /* shadow-md */
+            cursor: pointer;
+            position: relative;
+            opacity: 1; /* Domyślna nieprzezroczystość */
+        }
+
+        /* Kafelki powinny zmieniać skalę/wygląd hover tylko wtedy, gdy można w nie kliknąć */
+        .cell:not(.cell-disabled-click):hover {
+            transform: scale(1.02);
+        }
+        .cell:not(.cell-disabled-click):active {
+            transform: scale(0.98);
+        }
+
+        /* Wyłączenie klikania (zajęte lub koniec gry) - kontrola tylko kursora */
+        .cell-disabled-click {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .cell-occupied {
+             cursor: not-allowed;
+        }
+
+        .cell-x {
+            color: #dc2626; /* text-red-600 */
+        }
+        .cell-o {
+            color: #2563eb; /* text-blue-600 */
+        }
+        
+        /* Wyłączenie wizualne stosuje się TYLKO do niezwycięskich kafelków, gdy gra jest zakończona. */
+        .cell-disabled-visuals {
+             opacity: 0.5;
+        }
+        
+        /* Podświetlenie zwycięskich kafelków */
+        .cell-win-line {
+            transform: scale(1.05); /* Lekkie powiększenie zwycięskiej komórki */
+            background-color: #c9b911; /* Bardzo jasny żółty/kremowy */
+        }
+        
+        /* --- Style Linii Zwycięstwa --- */
+        
+        .win-line-overlay {
+            z-index: 10; 
+            position: absolute;
+            top: 0.5rem; 
+            left: 0.5rem; 
+            width: calc(100% - 1rem); 
+            height: calc(100% - 1rem); 
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .win-line {
+            transition: all 0.5s ease-out;
+            opacity: 0;
+            height: 10px; 
+            position: absolute;
+            background-color: #facc15; /* bg-yellow-400 */
+            border-radius: 9999px; /* rounded-full */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); /* shadow-lg */
+            
+            transform: scaleX(0); 
+            transform-origin: left; 
+        }
+        .win-line.active {
+            opacity: 0.9;
+        }
+
+        /* --- Wiersze (Horizontal) --- */
+        .line-row-0 .win-line, .line-row-1 .win-line, .line-row-2 .win-line {
+            width: 100%; 
+            left: 0;
+            transform-origin: center center; 
+        }
+        
+        .line-row-0 .win-line { top: 16.66%; } 
+        .line-row-1 .win-line { top: 50%; }    
+        .line-row-2 .win-line { top: 83.33%; } 
+        
+        .line-row-0 .win-line.active, .line-row-1 .win-line.active, .line-row-2 .win-line.active {
+            transform: translateY(-50%) scaleX(1);
+        }
+
+        /* --- Kolumny (Vertical) --- */
+        .line-col-0 .win-line, .line-col-1 .win-line, .line-col-2 .win-line {
+            transform-origin: center center;
+            width: 100%; 
+            height: 10px;
+            top: 50%; 
+        }
+
+        .line-col-0 .win-line { left: 16.66%; }
+        .line-col-1 .win-line { left: 50%; }
+        .line-col-2 .win-line { left: 83.33%; }
+
+        .line-col-0 .win-line.active, .line-col-1 .win-line.active, .line-col-2 .win-line.active {
+            transform: translate(-50%, -50%) rotate(90deg) scaleX(1);
+        }
+
+        /* --- Przekątne --- */
+        .line-diag-1 .win-line, .line-diag-2 .win-line {
+            width: 141.42%;
+            height: 10px;
+            top: 50%; 
+            left: 50%; 
+            transform-origin: center center;
+        }
+
+        /* Diagonal 1: Lewy-góra do Prawy-dół (45 deg) */
+        .line-diag-1 .win-line.active {
+            transform: translate(-50%, -50%) rotate(45deg) scaleX(1);
+        }
+        
+        /* Diagonal 2: Prawy-góra do Lewy-dół (-45 deg) */
+        .line-diag-2 .win-line.active {
+            transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
+        }
