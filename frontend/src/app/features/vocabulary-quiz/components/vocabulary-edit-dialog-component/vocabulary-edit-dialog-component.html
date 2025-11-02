@@ -1,0 +1,92 @@
+
+    <h2 mat-dialog-title>Edycja słownictwa</h2>
+        <div 
+            class="modal-container"
+           (click)="closeEditDialog($event.target)"
+            #modalBackground
+        >
+            <div class="modal-content" (click)="$event.stopPropagation()">
+                <h2 class="modal-header">Edycja Wpisu Słownictwa</h2>
+
+                <form>
+                    <div class="form-section">
+                        <label for="edit-word-en" class="form-label">Słowo / Fraza Angielska <span class="required-star">*</span></label>
+                        <input type="text" id="edit-word-en" 
+                                [value]="currentEditEntry()?.wordPhraseEn"
+                                (input)="updateEditField('wordPhraseEn', $event.target.value)"
+                                class="form-input" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="edit-translation-pl" class="form-label">Tłumaczenie Polskie <span class="required-star">*</span></label>
+                        <input type="text" id="edit-translation-pl" 
+                                [value]="currentEditEntry()?.translationPl"
+                                (input)="updateEditField('translationPl', $event.target.value)"
+                                class="form-input" required>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="edit-part-of-speech" class="form-label">Część Mowy <span class="required-star">*</span></label>
+                        <select id="edit-part-of-speech"
+                                [value]="currentEditEntry()?.partOfSpeech"
+                                (change)="updateEditField('partOfSpeech', $event.target)"
+                                class="form-select" required>
+                            <option value="" disabled selected>-- Wybierz --</option>
+                            @for (option of partOfSpeechOptions(); track option[0]) {
+                                <option [value]="option[0]">{{ option[1] }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="edit-context-source" class="form-label">Źródło Kontekstu <span class="required-star">*</span></label>
+                        <select id="edit-context-source"
+                                [value]="currentEditEntry()?.contextSource"
+                                (change)="updateEditField('contextSource', $event.target)"
+                                class="form-select" required>
+                            <option value="" disabled selected>-- Wybierz --</option>
+                            @for (option of contextSourceOptions(); track option[0]) {
+                                <option [value]="option[0]">{{ option[1] }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-section">
+                        <label for="edit-source-title" class="form-label">Tytuł Źródła (opcjonalnie)</label>
+                        <input type="text" id="edit-source-title" 
+                                [value]="currentEditEntry()?.sourceTitle"
+                                (input)="updateEditField('sourceTitle', $event.target.value)"
+                                class="form-input">
+                    </div>
+
+                    <div class="grid-2-cols form-section" style="margin-bottom: 0;">
+                        <div>
+                            <label for="edit-episode-number" class="form-label">Nr. Odcinka (opcjonalnie)</label>
+                            <input type="number" id="edit-episode-number" min="1"
+                                    [value]="currentEditEntry()?.episodeNumber"
+                                    (input)="updateEditField('episodeNumber', $event.target.value)"
+                                    class="form-input">
+                        </div>
+
+                        <div>
+                            <label for="edit-time-offset" class="form-label">Czas (Sekundy) (opcjonalnie)</label>
+                            <input type="number" id="edit-time-offset" min="0"
+                                    [value]="currentEditEntry()?.timeOffsetSeconds"
+                                    (input)="updateEditField('timeOffsetSeconds', $event.target.value)"
+                                    class="form-input">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            (click)="closeEditDialog()"
+                            class="action-button btn-cancel"
+                        >
+                            Anuluj
+                        </button>
+                         <button mat-flat-button color="warn" (click)="saveEdit($event)" [disabled]="isProcessing()"> Zapisz zmiany</button>
+                    </div>
+                </form>
+            </div>
+        </div>
