@@ -21,6 +21,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { VocabularyDeleteDialogComponent } from '../vocabulary-delete-dialog-component/vocabulary-delete-dialog-component';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { VocabularyEditDialogComponent } from '../vocabulary-edit-dialog-component/vocabulary-edit-dialog-component';
 
 @Component({
   selector: 'app-vocabulary-table-component',
@@ -75,10 +76,8 @@ export class VocabularyTableComponent implements OnInit {
   });
 
  private filters = computed<FilterVocabularyEntryForm>(() => {
-    // Używamy tego sygnału jako zależności, aby wymusić re-run, gdy select się zmieni
     this.selectFilterTrigger(); 
     
-    // Zwracamy bieżący stan filtrów
     return {
         word: this.wordFilter(), 
         masteryStatus: this.filterForm.controls['masteryStatus'].value,
@@ -139,19 +138,15 @@ handlePageEvent(event: PageEvent): void {
     let newPageIndex = event.pageIndex;
     let newPageSize = event.pageSize;
 
-    // Jeżeli zmieniono rozmiar strony, resetujemy indeks strony na 0.
     if (isPageSizeChanged) {
       newPageIndex = 0;
     }
 
-    // KLUCZOWA ZMIANA: Konwersja indeksu bazującego na zerze (MatPaginator)
-    // na numer strony bazujący na jedynce (API Spring Boot).
     const pageForApi = newPageIndex + 1;
 
-    // Aktualizujemy sygnał
     this.pagination.update(currentPagination => ({
       ...currentPagination,
-      page: pageForApi, // Wysyłamy page >= 1 do serwera
+      page: pageForApi, 
       size: newPageSize,
     }));
    this.getAllEntries(this.filters(), this.pagination());
@@ -168,30 +163,23 @@ handleSortChange(sort: Sort): void {
         sortDirection: newSortDirection
     }));
 
-    this.getAllEntries(this.filters(), this.pagination()); // Używamy computed filters
+    this.getAllEntries(this.filters(), this.pagination()); 
   }
 
  applyFilters(): void {
-    // 1. Aktualizujemy sygnał, zatwierdzając wartość z kontrolki 'word'
     this.wordFilter.set(this.filterForm.controls['word'].value || '');
 
-    // 2. Resetujemy stronę
     this.pagination.update(p => ({...p, page: 1}));
 
-    // 3. Pobieramy dane (computed filters używa teraz nowej wartości wordFilter)
     this.getAllEntries(this.filters(), this.pagination());
   }
 
    handleSelectFilterChange(): void {
-     // Wartości selectów są automatycznie częścią computed filters().
-     // Musimy jedynie zresetować stronę i pobrać dane.
      this.selectFilterTrigger.update(val => val + 1);
      this.pagination.update(p => ({...p, page: 1}));
      this.getAllEntries(this.filters(), this.pagination());
   }
-  /**
-   * Resetuje formularz filtra i ładuje wszystkie dane od nowa.
-   */
+  
   clearFilters(): void {
     this.filterForm.reset({
       word: '',
@@ -200,35 +188,41 @@ handleSortChange(sort: Sort): void {
       contextSource: null
     });
 
-    // 2. Resetuje sygnał słowny (poza resetem formularza)
     this.wordFilter.set('');
     
-    // 3. AKTUALIZUJE TRIGGER, żeby computed filters w końcu pobrało NULL dla selectów
     this.selectFilterTrigger.update(val => val + 1);
-    // Resetuj stronę do pierwszej
     this.pagination.update(p => ({...p, page: 1}));
     this.getAllEntries(this.filters(), this.pagination());
   }
 
    private getFilterValues(): FilterVocabularyEntryForm {
-    // Używamy `getRawValue()` aby pobrać wszystkie wartości, w tym null
     return this.filterForm.getRawValue() as FilterVocabularyEntryForm;
   }
 
    confirmAndDeleteWord(word: VocabularyEntryView): void {
-    // Otwieramy nowy komponent dialogu
     const dialogRef = this.dialog.open(VocabularyDeleteDialogComponent, {
       width: '380px',
-      data: word // Przekazujemy pełne dane słówka
+      data: word 
     });
 
-    // Subskrybujemy wynik zamknięcia dialogu
     dialogRef.afterClosed().subscribe((deletedId: number | false) => {
-      // Sprawdzamy, czy zamknięcie zwróciło ID (czyli operacja zakończyła się sukcesem)
       if (typeof deletedId === 'number') {
         this.toastService.success(`Słówko ID ${deletedId} zostało trwale usunięte.`);
       } else if (deletedId === false) {
-        // Jeśli zwrócono 'false' (Anuluj lub błąd API w dialogu)
+        this.toastService.info('Usuwanie anulowane lub nieudane.');
+      }
+    });
+  }
+
+  showEditDialog(word: VocabularyEntryView): void {
+      const dialogRef = this.dialog.open(VocabularyEditDialogComponent, {
+      width: '380px',
+      data: word 
+    });
+    dialogRef.afterClosed().subscribe((editId: number | false) => {
+      if (typeof editId === 'number') {
+        this.toastService.success(`Słówko ID ${editId} zostało trwale.`);
+      } else if (editId === false) {
         this.toastService.info('Usuwanie anulowane lub nieudane.');
       }
     });

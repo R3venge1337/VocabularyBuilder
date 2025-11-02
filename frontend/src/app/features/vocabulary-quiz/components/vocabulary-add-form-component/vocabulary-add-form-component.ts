@@ -15,7 +15,7 @@ import { PartOfSpeech } from '../../../../shared/enums/partOfSpeech';
 import { CreateVocabularyEntryForm } from '../../models/createVocabularyEntryForm';
 import { VocabularyEntryView } from '../../models/vocabularyEntryView';
 import { VocabularyService } from '../../services/vocabulary-service';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -61,7 +61,7 @@ export class VocabularyAddFormComponent {
     contextSource: [null as ContextSource | null, [Validators.required]],
     
     // Pola dodatkowe dla kontekstu źródła
-    sourceTitle: ['', [Validators.maxLength(150)]], 
+    sourceTitle: [null, [Validators.maxLength(150)]], 
     episodeNumber: [null as number | null, [Validators.min(1)]], 
     timeOffsetSeconds: [null as number | null, [Validators.min(0)]], 
 
@@ -121,7 +121,7 @@ export class VocabularyAddFormComponent {
       wordPhraseEn: '', 
       translationPl: '', 
       contextExample: '',
-      sourceTitle: '',
+      sourceTitle: null,
       episodeNumber: null,
       timeOffsetSeconds: null,
       partOfSpeech: null, 

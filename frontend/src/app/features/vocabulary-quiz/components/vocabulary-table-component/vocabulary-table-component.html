@@ -1,34 +1,27 @@
 <div class="table-container">
-    <!-- Sekcja filtrowania -->
     <section class="filter-form-section">
         <h2 class="mat-h2">Filtrowanie Słówek</h2>
         
         <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
-            <!-- Kontener dla kontrolek z odstępami -->
             <div class="filter-form-group">
                 
-                <!-- Filtr Słowny -->
                 <mat-form-field appearance="outline">
                     <mat-label>Słowo/Fraza</mat-label>
                     <input matInput formControlName="word" (keyup.enter)="applyFilters()">
                 </mat-form-field>
 
-                <!-- Select Statusu Opanowania -->
                 <mat-form-field appearance="outline">
                     <mat-label>Status Opanowania</mat-label>
-                    <!-- Używamy (selectionChange) do automatycznego odświeżenia tabeli -->
                     <mat-select formControlName="masteryStatus" (selectionChange)="handleSelectFilterChange()">
                         <mat-option [value]="null">-- Wszystkie --</mat-option>
                         @for (status of masteryStatusKeys; track status) {
                             <mat-option [value]="status">
-                                <!-- Używamy Pipe'a w template, a nie w komponencie TS -->
                                 {{ status | titlecase }} 
                             </mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
 
-                <!-- Select Części Mowy -->
                 <mat-form-field appearance="outline">
                     <mat-label>Część Mowy</mat-label>
                     <mat-select formControlName="partOfSpeech" (selectionChange)="handleSelectFilterChange()">
@@ -39,7 +32,6 @@
                     </mat-select>
                 </mat-form-field>
 
-                <!-- Select Źródła Kontekstu -->
                 <mat-form-field appearance="outline">
                     <mat-label>Źródło Kontekstu</mat-label>
                     <mat-select formControlName="contextSource" (selectionChange)="handleSelectFilterChange()">
@@ -61,7 +53,6 @@
         </form>
     </section>
 
-      <!-- Wskaźnik ładowania -->
        @if(isLoading()) {
         <div class="loading-indicator" >
         <mat-spinner diameter="40" color="primary"></mat-spinner>
@@ -70,7 +61,6 @@
        }
       
 
-      <!-- Tabela Danych -->
        @if(!isLoading()) {
 
         <div  class="table-card-wrapper">
@@ -82,37 +72,31 @@
                [matSortDirection]="matSortDirection()"
                (matSortChange)="handleSortChange($event)">
             
-            <!-- Kolumna ID (sortable) -->
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="id" class="header-cell"> ID </th>
                 <td mat-cell *matCellDef="let element"> {{element.id}} </td>
             </ng-container>
             
-            <!-- Kolumna Angielski (sortable) -->
             <ng-container matColumnDef="wordPhraseEn">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="wordPhraseEn" class="header-cell"> Angielski </th>
                 <td mat-cell *matCellDef="let element" class="word-phrase-text"> {{element.wordPhraseEn}} </td>
             </ng-container>
 
-            <!-- Kolumna Polski (sortable) -->
             <ng-container matColumnDef="translationPl">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="translationPl" class="header-cell"> Polski </th>
                 <td mat-cell *matCellDef="let element"> {{element.translationPl}} </td>
             </ng-container>
             
-            <!-- Kolumna Cz. Mowy (sortable) -->
             <ng-container matColumnDef="partOfSpeech">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="partOfSpeech" class="header-cell"> Cz. Mowy </th>
                 <td mat-cell *matCellDef="let element"> {{element.partOfSpeech}} </td>
             </ng-container>
 
-               <!-- Kolumna Kontekst (sortable) -->
             <ng-container matColumnDef="contextSource">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="contextSource" class="header-cell"> Wystąpienie </th>
                 <td mat-cell *matCellDef="let element"> {{element.contextSource}} </td>
             </ng-container>
 
-            <!-- Kolumna Status (sortable) -->
             <ng-container matColumnDef="masteryStatus">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="masteryStatus" class="header-cell"> Status </th>
                 <td mat-cell *matCellDef="let element"> 
@@ -122,21 +106,20 @@
                 </td>
             </ng-container>
             
-            <!-- Kolumna Data (sortable) -->
             <ng-container matColumnDef="createdAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt" class="header-cell"> Data Dodania </th>
                 <td mat-cell *matCellDef="let element"> {{element.createdAt | date:'y.MM.dd'}} </td>
             </ng-container>
             
-            <!-- Wiersze -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns" class="table-header-row"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-data-row"></tr>
 
-               <!-- Kolumna Akcje (Usuń) -->
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef> Akcje </th>
                   <td mat-cell *matCellDef="let element"> 
-                    <!-- Przycisk z ikoną kosza, wywołujący modal potwierdzenia -->
+                    <button mat-icon-button color="warn" (click)="showEditDialog(element)">
+                      <mat-icon>mode_edit</mat-icon>
+                    </button>
                     <button mat-icon-button color="warn" (click)="confirmAndDeleteWord(element)">
                       <mat-icon>delete</mat-icon>
                     </button>
@@ -145,7 +128,6 @@
             
         </table>
         
-        <!-- Paginator -->
         <mat-paginator [length]="pageData().totalElements"
                        [pageSize]="pageData().pageSize"
                        [pageIndex]="pageData().pageNumber - 1"
@@ -157,8 +139,6 @@
       </div>
        }
       
-
-      <!-- Brak danych -->
        @if(!isLoading() && pageData().content.length === 0){
         <div  class="no-data-message">
         Brak słówek do wyświetlenia na tej stronie.

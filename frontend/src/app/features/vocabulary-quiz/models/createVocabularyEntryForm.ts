@@ -3,9 +3,9 @@ import { ContextSource } from '../../../shared/enums/contextSource'
 export interface CreateVocabularyEntryForm {
   wordPhraseEn: string;
   translationPl: string;
-  partOfSpeech: PartOfSpeech | null; // Null, dopóki użytkownik nie wybierze
-  contextSource: ContextSource | null; // Null, dopóki użytkownik nie wybierze
-  sourceTitle: string;
+  partOfSpeech: PartOfSpeech | null;
+  contextSource: ContextSource | null; 
+  sourceTitle: string | null;
   episodeNumber: number | null;
   timeOffsetSeconds: number | null;
 }
