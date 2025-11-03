@@ -1,7 +1,6 @@
 package az.project.VocabularyBuilder.vocabulary.controller;
 
 import az.project.VocabularyBuilder.common.ControllerPaths;
-import az.project.VocabularyBuilder.vocabulary.domain.ContextSource;
 import az.project.VocabularyBuilder.vocabulary.domain.VocabularyQuizService;
 import az.project.VocabularyBuilder.vocabulary.dto.QuizDto;
 import az.project.VocabularyBuilder.vocabulary.dto.QuizHistoryDto;
