@@ -2,13 +2,16 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
+import { CustomCarouselComponent } from "../custom-carousel-component/custom-carousel-component";
 
 @Component({
   selector: 'app-home-card-component',
-  imports: [ 
-    RouterLink,       
-    MatCardModule,     
-    MatButtonModule],
+  imports: [
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    CustomCarouselComponent
+],
   templateUrl: './home-card-component.html',
   styleUrl: './home-card-component.scss'
 })
