@@ -8,6 +8,7 @@ import az.project.VocabularyBuilder.vocabulary.dto.CreateVocabularyEntryForm;
 import az.project.VocabularyBuilder.vocabulary.dto.FilterVocabularyEntryForm;
 import az.project.VocabularyBuilder.vocabulary.dto.UpdateVocabularyEntryForm;
 import az.project.VocabularyBuilder.vocabulary.dto.VocabularyEntryView;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -37,14 +38,14 @@ class VocabularyEntryController {
 
     @PostMapping(ControllerPaths.ENTRY_BASE)
     @ResponseStatus(HttpStatus.CREATED)
-    public VocabularyEntryView createEntry(@Validated @RequestBody final CreateVocabularyEntryForm request) {
+    public VocabularyEntryView createEntry(@Valid @RequestBody final CreateVocabularyEntryForm request) {
         return entryFacade.createEntry(request);
     }
 
     @PutMapping(ControllerPaths.Vocabulary.BY_ID)
     public VocabularyEntryView updateEntry(
             @PathVariable final Long id,
-            @Validated @RequestBody final UpdateVocabularyEntryForm form) {
+            @Valid @RequestBody final UpdateVocabularyEntryForm form) {
         return entryFacade.updateEntry(id, form);
     }
 

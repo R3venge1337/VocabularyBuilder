@@ -18,6 +18,7 @@ public record VocabularyEntryView(
         ContextSource contextSource,
         String sourceTitle,
         Integer episodeNumber,
-        Integer timeOffsetSeconds
+        Integer timeOffsetSeconds,
+        String imageUrl
 ) {
 }

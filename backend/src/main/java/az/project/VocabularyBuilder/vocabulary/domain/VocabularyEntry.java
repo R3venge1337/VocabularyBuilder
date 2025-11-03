@@ -62,4 +62,7 @@ public class VocabularyEntry extends AbstractEntityId {
 
     @Column(name = "total_correct_aswers", nullable = true)
     private Integer totalCorrectAnswers;
+
+    @Column(name = "image_url", nullable = true, length = 1024)
+    private String imageUrl;
 }
