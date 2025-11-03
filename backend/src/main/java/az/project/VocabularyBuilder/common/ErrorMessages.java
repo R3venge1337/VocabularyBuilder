@@ -8,6 +8,7 @@ public class ErrorMessages {
     public static final String PART_OF_SPEECH_NEED = "Część mowy jest wymagana.";
     public static final String CONTEXT_SOURCE_NEED = "Typ źródła kontekstu jest wymagany.";
     public static final String NUMBER_POSITIVE = "Wartość musi być liczbą dodatnią.";
+    public static final String URL_PATTERN = "Wprowadziłeś niepoprawny format adresu URL";
 
     // --- Błędy Zasobów  ---
     public static final String VOCABULARY_ENTRY_NOT_FOUND = "Nie znaleziono słowa w słowniku.";

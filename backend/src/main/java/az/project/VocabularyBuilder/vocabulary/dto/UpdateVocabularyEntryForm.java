@@ -6,6 +6,9 @@ import az.project.VocabularyBuilder.vocabulary.domain.PartOfSpeech;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.hibernate.validator.constraints.URL;
+
+import static az.project.VocabularyBuilder.common.Constants.URL_REGEX;
 
 public record UpdateVocabularyEntryForm(
         @NotBlank(message = ErrorMessages.WORD_PHRASE_NEED)
@@ -26,6 +29,9 @@ public record UpdateVocabularyEntryForm(
         Integer episodeNumber,
 
         @Positive(message = ErrorMessages.NUMBER_POSITIVE)
-        Integer timeOffsetSeconds
+        Integer timeOffsetSeconds,
+
+        @URL(message = ErrorMessages.URL_PATTERN, regexp = URL_REGEX)
+        String imageUrl
 ) {
 }

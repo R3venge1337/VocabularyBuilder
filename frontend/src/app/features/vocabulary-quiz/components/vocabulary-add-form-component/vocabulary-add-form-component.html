@@ -84,6 +84,15 @@
                             <input matInput formControlName="sourceTitle" maxlength="150">
                         </mat-form-field>
 
+                             <mat-form-field appearance="outline" class="small-item">
+                                <mat-label>URL Obrazu (Kontekst Wizualny)</mat-label>
+                                <input matInput formControlName="imageUrl" maxlength="1024">
+                                <mat-hint>Opcjonalny link do obrazu wspierającego zapamiętywanie.</mat-hint>
+                                @if (vocabularyForm.controls['imageUrl'].hasError('pattern') && vocabularyForm.controls['imageUrl'].touched) {
+                                    <mat-error>Wprowadź poprawny format URL (z http/https).</mat-error>
+                                }
+                            </mat-form-field>
+
                         <!-- PAMIĘTAJ: To są pola warunkowe, które pokazują się przy MOVIE lub SERIES -->
                         @if (vocabularyForm.controls['contextSource'].value === ContextSource.MOVIE || 
                             vocabularyForm.controls['contextSource'].value === ContextSource.SERIES) {

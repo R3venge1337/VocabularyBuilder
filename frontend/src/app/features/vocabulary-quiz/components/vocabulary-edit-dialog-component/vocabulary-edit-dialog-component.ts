@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-vocabulary-edit-dialog-component',
@@ -59,6 +60,7 @@ export class VocabularyEditDialogComponent {
 
         if (!editedEntry.wordPhraseEn.trim() || !editedEntry.translationPl.trim() || !editedEntry.partOfSpeech || !editedEntry.contextSource) {
             console.error("Błąd: Wymagane pola są puste.");
+            this.toastService.error("Błąd: Wymagane pola są puste.")
             return;
         }
         try {
@@ -66,10 +68,10 @@ export class VocabularyEditDialogComponent {
       
       this.deleteStatus.set('success');
       this.toastService.success(`Słówko ID ${this.data.id} zostało trwale zmienione`)
-    } catch (err) {
+    } catch (err: any) {
       console.error("Błąd podczas update:", err);
       this.error.set(err); 
-      this.toastService.error("Nie udało się zaktualizować słowa" )
+      this.toastService.error(err.error.message)
       this.deleteStatus.set('failure'); 
     } finally {
       this.isProcessing.set(false); 

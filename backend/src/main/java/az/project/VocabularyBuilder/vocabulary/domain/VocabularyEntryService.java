@@ -154,6 +154,7 @@ class VocabularyEntryService implements VocabularyEntryFacade {
         entry.setSourceTitle(request.sourceTitle());
         entry.setEpisodeNumber(request.episodeNumber());
         entry.setTimeOffsetSeconds(request.timeOffsetSeconds());
+        entry.setImageUrl(request.imageUrl());
         return entry;
     }
 
@@ -170,7 +171,8 @@ class VocabularyEntryService implements VocabularyEntryFacade {
                 entry.getContextSource(),
                 entry.getSourceTitle(),
                 entry.getEpisodeNumber(),
-                entry.getTimeOffsetSeconds()
+                entry.getTimeOffsetSeconds(),
+                entry.getImageUrl()
         );
     }
 
@@ -179,11 +181,11 @@ class VocabularyEntryService implements VocabularyEntryFacade {
         entry.setWordPhraseEn(view.wordPhraseEn());
         entry.setTranslationPl(view.translationPl());
         entry.setPartOfSpeech(view.partOfSpeech());
-
         entry.setContextSource(view.contextSource());
         entry.setSourceTitle(view.sourceTitle());
         entry.setEpisodeNumber(view.episodeNumber());
         entry.setTimeOffsetSeconds(view.timeOffsetSeconds());
+        entry.setImageUrl(view.imageUrl());
 
         return entry;
     }

@@ -15,4 +15,5 @@ export interface VocabularyEntryView {
   sourceTitle: string;
   episodeNumber: number | null;
   timeOffsetSeconds: number | null;
+  imageUrl: string | null;
 }
