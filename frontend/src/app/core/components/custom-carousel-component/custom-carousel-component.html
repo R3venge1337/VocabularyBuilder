@@ -1,0 +1,96 @@
+<div class="vocabulary-carousel-container">
+      <div class="carousel-header">
+        <h1 class="header-title">Karuzela Fiszki Słownictwo</h1>
+      </div>
+
+      <!-- Stan ładowania -->
+      @if (isLoading()) {
+        <div class="loading-state">
+          <!-- Ikona ładowania -->
+          <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p class="loading-text">Ładowanie fiszek...</p>
+        </div>
+      } 
+      <!-- Stan: Brak Danych (po załadowaniu) -->
+      @else if (cards().length === 0 && !hasMoreCards()) {
+        <div class="no-data-state">
+          <p class="no-data-title">Brak fiszek do wyświetlenia.</p>
+          <p class="no-data-subtitle">Dodaj nowe fiszki, aby rozpocząć naukę.</p>
+        </div>
+      } 
+      <!-- Karuzela -->
+      @else {
+        <div class="carousel-content-wrapper">
+          @for (item of cards(); track item.id; let i = $index) {
+            <!-- Karta używa translate X do animacji przejścia -->
+            <div 
+              class="carousel-card-item"
+              [style.transform]="'translateX(' + (-currentSlideIndex() * 100) + '%)'">
+
+              <div class="card-inner-content">
+                
+                <!-- Obraz (card.image) lub Placeholder -->
+                <div class="image-area">
+                  <img 
+                    [src]="getImageUrl(item)" 
+                    alt="Ilustracja dla słowa {{item.wordPhraseEn}}" 
+                    class="card-image"
+                    onerror="this.onerror=null;this.src='https://placehold.co/400x200/475569/f8fafc?text=B%C5%82%C4%85d+Wczytywania+Obrazu';"
+                  >
+                </div>
+
+                <!-- Tekst i Tłumaczenie -->
+                <div class="text-area">
+                  <h2 class="word-en">
+                    {{ item.wordPhraseEn }}
+                  </h2>
+                  <p class="translation-pl">
+                    {{ item.translationPl}}
+                  </p>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Kontrolki Karuzeli i Indykatory -->
+        <div class="carousel-controls">
+          <button (click)="previousSlide(); resetTimer()" [disabled]="currentSlideIndex() === 0" class="control-button prev-button">
+            <svg class="control-icon rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            Poprzednia
+          </button>
+          
+          <!-- Indykatory slajdów: maksymalnie 3 kropki (poprzedni, obecny, następny) -->
+          <div class="slide-indicators">
+            @if (currentSlideIndex() > 0) {
+                <span class="indicator-dot" (click)="goToSlide(currentSlideIndex() - 1); resetTimer()"></span>
+            }
+            <span class="indicator-dot active" (click)="resetTimer()"></span>
+            @if (currentSlideIndex() < cards().length - 1) {
+                <span class="indicator-dot" (click)="goToSlide(currentSlideIndex() + 1); resetTimer()"></span>
+            }
+            <!-- Opcjonalnie wskaźnik 'więcej', jeśli załadowaliśmy dużo kart, ale to przekracza 3 widoczne -->
+            @if (cards().length > 3 && currentSlideIndex() < cards().length - 2) {
+                <span class="indicator-dot more-indicator">...</span>
+            }
+          </div>
+
+          <button (click)="nextSlide(); resetTimer()" [disabled]="currentSlideIndex() === cards().length - 1 && !hasMoreCards()" class="control-button next-button">
+            Następna
+            @if (isFetchingNextChunk()) {
+                <svg class="spinner-small" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            } @else {
+                <svg class="control-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            }
+          </button>
+        </div>
+        
+        <p class="carousel-info-text">Fiszka {{ currentSlideIndex() + 1 }} z {{ cards().length }} ({{ hasMoreCards() ? 'całkowita liczba słów: ' + totalWordCount() : 'koniec listy' }})</p>
+      }
+    </div>
