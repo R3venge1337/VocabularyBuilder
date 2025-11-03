@@ -1,0 +1,8 @@
+package az.project.VocabularyBuilder.common;
+
+public class Constants {
+
+    private Constants(){}
+
+    public static final String URL_REGEX = "^https?://(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&/=]*)$";
+}
