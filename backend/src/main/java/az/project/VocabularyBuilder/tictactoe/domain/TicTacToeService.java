@@ -162,12 +162,13 @@ public class TicTacToeService implements TicTacToeFacade {
     }
 
     @Override
+    @Transactional
     public GameReplayDto getGameReplay(final UUID sessionUuid) {
         GameSession session = gameSessionRepository.findByGameUuid(sessionUuid)
                 .orElseThrow(() -> new NotFoundException("Historia partii nie została znaleziona.", sessionUuid));
 
         // Musimy upewnić się, że GameMove są załadowane (Lazy Loading)
-        session.getMoves().size();
+        session.getMoves();
 
         return mapToGameReplayDto(session);
     }
