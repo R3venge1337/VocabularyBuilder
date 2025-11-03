@@ -1,0 +1,108 @@
+<div class="main-container">
+      <div class="details-card">
+          <header class="details-header-section">
+              <h2 class="details-title">Szczegóły Powtórki Gry</h2>
+              <button (click)="goBack.emit()" class="back-button">
+                  &larr; Powrót do Historii
+              </button>
+          </header>
+
+          @if (replay()) {
+              <div class="game-info-grid">
+                  <p><strong>Identyfikator Gry: </strong> <span class="info-value">{{ replay()!.sessionUuid }}</span></p>
+                  <p><strong>Nazwa gry: </strong> <span class="info-value">{{ getTypeLabel(replay()!.gameType) }}</span></p>
+                  <p><strong>Data Gry: </strong> <span class="info-value">{{ formatDate(replay()!.datePlayed) }}</span></p>
+                  
+                  <p><strong>Strona Gracza:</strong> 
+                      <span class="info-value big-value" [ngClass]="{'player-x': playerLabels().mainSymbol === GameSide.X, 'player-o': playerLabels().mainSymbol === GameSide.O}">
+                          {{ playerLabels().main }}
+                      </span> 
+                  </p>
+
+                  <p><strong>Przeciwnik:</strong> 
+                      <span class="info-value big-value" [ngClass]="{'player-x': playerLabels().opponentSymbol === GameSide.X, 'player-o': playerLabels().opponentSymbol === GameSide.O}">
+                          {{ playerLabels().opponent }}
+                      </span> 
+                  </p>
+                  
+                  <p><strong>Rezultat:</strong> 
+                      <span [ngClass]="getResultClass(replay()!.result)" class="result-badge big-value">
+                          {{ getResultLabel(replay()!.result) }}
+                      </span>
+                  </p>
+              </div>
+          } @else {
+              <p class="loading-message">Ładowanie szczegółów gry...</p>
+          }
+
+          <div class="content-wrapper">
+              <div class="board-column">
+                  <h3 class="board-title">Stan Planszy (Ruch {{ selectedMoveIndex() + 1 }} z {{ replay()?.moves?.length || 0 }})</h3>
+                  <div class="tictactoe-board">
+                      @for (row of getBoardState(); track $index; let rowIdx = $index) {
+                          @for (cell of row; track $index; let colIdx = $index) {
+                              <div 
+                                  class="board-cell"
+                                  [class.active-move]="isActiveMove(rowIdx, colIdx)"
+                              >
+                                  <span [ngClass]="{'symbol-x': cell === GameSide.X, 'symbol-o': cell === GameSide.O}">
+                                      {{ cell !== GameSide.EMPTY ? cell : '&nbsp;' }}
+                                  </span>
+                              </div>
+                          }
+                      }
+                  </div>
+              </div>
+
+              <div class="moves-column">
+                  <h3 class="moves-title">Ruchy ({{ replay()?.moves?.length || 0 }} łącznie)</h3>
+                  
+                  <div class="move-controls">
+                      <button 
+                          (click)="goToPreviousMove()" 
+                          [disabled]="selectedMoveIndex() <= -1"
+                          class="control-button prev-button"
+                      >
+                          &larr; Poprzedni
+                      </button>
+                      <span class="move-counter">{{ selectedMoveIndex() + 1 }} / {{ replay()?.moves?.length || 0 }}</span>
+                      <button 
+                          (click)="goToNextMove()" 
+                          [disabled]="selectedMoveIndex() >= (replay()?.moves?.length || 0) - 1"
+                          class="control-button next-button"
+                      >
+                          Następny &rarr;
+                      </button>
+                  </div>
+
+                  <div class="moves-list-container">
+                      @if (replay() && replay()!.moves.length > 0) {
+                          <ul class="moves-list">
+                              <li 
+                                  class="move-item"
+                                  [class.active]="selectedMoveIndex() === -1"
+                                  (click)="selectMoveAndEmit(-1)"
+                              >
+                                  <span class="move-index">0.</span>
+                                  <span class="move-player">Start gry</span>
+                              </li>
+                              @for (move of replay()!.moves; track $index) {
+                                  <li 
+                                      class="move-item"
+                                      [class.active]="selectedMoveIndex() === $index"
+                                      (click)="selectMoveAndEmit($index)"
+                                  >
+                                      <span class="move-index">{{ $index + 1 }}.</span>
+                                      <span class="move-player">{{ getPlayerLabel(move.playerSide) }}</span>
+                                      <span class="move-coords">{{ getCoordinates(move) }}</span>
+                                  </li>
+                              }
+                          </ul>
+                      } @else {
+                          <p class="no-moves-message">Brak zapisanych ruchów dla tej gry.</p>
+                      }
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
