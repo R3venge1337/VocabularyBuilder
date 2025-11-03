@@ -17,6 +17,10 @@ export const routes: Routes = [
         path: 'tictactoe',
         loadComponent: () => import('./features/tic-tac-toe/pages/tictactoe-page/tictactoe-page').then(m => m.TictactoePage)
     },
+    {
+        path: 'game/history',
+        loadComponent: () => import('./core/components/game-history-page/game-history-page').then(m => m.GameHistoryPage)
+    },
     { 
         path: '', 
         redirectTo: 'home', 

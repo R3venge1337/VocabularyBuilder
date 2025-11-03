@@ -1,0 +1,70 @@
+    @if (isLoading()) {
+        <div class="state-message state-message-loading">
+            Ładowanie historii...
+        </div>
+    } @else if (error()) {
+        <div class="error-box" role="alert">
+            Wystąpił błąd: {{ error() }}
+        </div>
+    } @else if (historyList().length === 0) {
+        <div class="state-message state-message-empty">
+            Brak rozegranych partii w historii.
+        </div>
+    } @else {
+        <div class="game-table-container">
+            <table class="game-table">
+                <thead>
+                    <tr>
+                        <th class="table-header" style="border-top-left-radius: 0.5rem;">Typ Gry</th>
+                        <th class="table-header">Data Rozegrania</th>
+                        <th class="table-header">Wynik</th>
+                        <th class="table-header hidden-on-mobile">Liczba Ruchów</th>
+                        <th class="table-header hidden-on-tablet">Czas Trwania (s)</th>
+                        <th class="table-header" style="text-align: center; border-top-right-radius: 0.5rem;">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (game of historyList(); track game.sessionUuid) {
+                        <tr class="table-row">
+                            <td class="table-cell table-cell-main">
+                                {{ getTypeLabel(game.gameType) }}
+                            </td>
+                            <td class="table-cell">
+                                {{ formatDate(game.datePlayed) }}
+                            </td>
+                            <td class="table-cell">
+                                <span [ngClass]="getResultClass(game.result)">
+                                    {{ getResultLabel(game.result) }}
+                                </span>
+                            </td>
+                            <td class="table-cell hidden-on-mobile">
+                                {{ game.movesCount }}
+                            </td>
+                            <td class="table-cell hidden-on-tablet">
+                                {{ game.durationSeconds }}
+                            </td>
+                            <td class="table-cell" style="text-align: center;">
+                                <button class="action-button" (click)="showDetails.emit(game)">
+                                    Pokaż ruchy
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="refresh-button-container">
+        <button 
+            (click)="refreshHistory.emit()" 
+            [disabled]="isLoading()"
+            class="refresh-button"
+        >
+            @if (isLoading()) {
+                Ładowanie...
+            } @else {
+                Odśwież Historię
+            }
+        </button>
+    </div>

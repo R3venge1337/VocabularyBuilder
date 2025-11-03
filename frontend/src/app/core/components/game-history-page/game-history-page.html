@@ -1,0 +1,23 @@
+            @if (isLoadingDetails()) {
+                <div class="loading-details">Ładowanie detali replay'a...</div>
+            } @else if (detailsError()) {
+                <div class="error-details">Błąd podczas ładowania detali: {{ detailsError() }}</div>
+                <button class="back-button" (click)="clearDetailsError()">Wróć</button>
+            } @else if (gameReplay()) {
+                 <app-game-history-details-component
+                    [game]="selectedGame()"
+                    [replay]="gameReplay()"
+                    (goBack)="clearReplay()"
+                ></app-game-history-details-component>
+            } @else {
+                <h1 class="main-title">
+                    Historia Gier
+                </h1>
+                <app-game-history-table-component
+                    [historyList]="historyList()"
+                    [isLoading]="isLoading()"
+                    [error]="error()"
+                    (refreshHistory)="loadGameHistory(NUMBER_OF_GAMES)" 
+                    (showDetails)="loadGameReplay($event)"
+                ></app-game-history-table-component>
+            }

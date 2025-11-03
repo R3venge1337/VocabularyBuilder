@@ -1,0 +1,251 @@
+.main-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 20px;
+        min-height: 100vh;
+        background-color: #f3f4f6;
+        font-family: 'Inter', sans-serif;
+    }
+    .details-card {
+        width: 100%;
+        max-width: 900px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+    }
+    .details-header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+    .details-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #1e40af;
+    }
+    .back-button {
+        background-color: #60a5fa;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border: none;
+    }
+    .back-button:hover { background-color: #3b82f6; }
+
+
+    .game-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px 30px;
+        padding: 15px 0;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 20px;
+    }
+    .game-info-grid strong {
+        color: #1f2937;
+        font-weight: 700;
+    }
+    
+    .info-value {
+        font-weight: 500;
+        color: #4b5563;
+        font-size: 1rem;
+        transition: color 0.2s;
+    }
+    
+    .big-value {
+        font-size: 1.15rem;
+        font-weight: 700;
+        padding: 2px 5px;
+        border-radius: 4px;
+    }
+
+    .player-x { 
+        color: #dc2626; 
+        background-color: #fef2f2; 
+    } 
+    .player-o { 
+        color: #2563eb; 
+        background-color: #eff6ff; 
+    }
+
+    .result-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .result-win { background-color: #d1fae5; color: #065f46; } 
+    .result-lose { background-color: #fee2e2; color: #991b1b; } 
+    .result-draw { background-color: #fef3c7; color: #b45309; } 
+
+    .content-wrapper { 
+        display: flex; 
+        gap: 30px;
+        flex-wrap: wrap; 
+        justify-content: center;
+    }
+    
+    .board-column { 
+        flex: 1 1 300px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .moves-column {
+        flex: 1 1 300px;
+        max-height: 400px; 
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .board-title, .moves-title { 
+        font-size: 1.25rem; 
+        font-weight: 700; 
+        margin-bottom: 1.5rem; 
+        color: #374151;
+    }
+    
+    .tictactoe-board {
+        display: grid;
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+        margin: 0; 
+        border: 4px solid #3b82f6;
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+    @media (min-width: 768px) {
+        .tictactoe-board {
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+        }
+    }
+    .board-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: 900;
+        border: 1px solid #d1d5db;
+        transition: background-color 0.3s ease;
+    }
+    .board-cell > span {
+        line-height: 1; 
+    }
+
+    .active-move {
+        background-color: #fcd34d; 
+        box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.7);
+    }
+    .symbol-x { color: #dc2626; } 
+    .symbol-o { color: #2563eb; } 
+
+    .move-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 5px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+    .move-counter {
+        font-weight: 600;
+        color: #1f2937;
+    }
+    .move-controls .control-button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        background-color: #4f46e5;
+        border-radius: 4px;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    .move-controls .control-button:hover:not(:disabled) {
+        background-color: #4338ca;
+    }
+    .move-controls .control-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .moves-list-container {
+        overflow-y: auto;
+        padding-right: 10px; 
+    }
+    .moves-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .move-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+        margin-bottom: 5px;
+        background-color: #f9fafb;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s, box-shadow 0.2s;
+    }
+    .move-item:hover {
+        background-color: #f3f4f6;
+    }
+    .move-item.active {
+        background-color: #dbeafe; 
+        box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+        font-weight: 600;
+    }
+    .move-index {
+        flex-basis: 15%;
+        color: #6b7280;
+    }
+    .move-player {
+        flex-basis: 45%;
+        color: #1f2937;
+    }
+    .move-coords {
+        flex-basis: 40%;
+        text-align: right;
+        color: #4b5563;
+    }
+    .no-moves-message, .loading-message {
+        text-align: center;
+        color: #9ca3af;
+        padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .content-wrapper {
+            flex-direction: column;
+            align-items: center;
+        }
+        .board-column {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        .moves-column {
+            width: 100%;
+            max-height: 300px;
+        }
+        .tictactoe-board {
+            grid-template-columns: repeat(3, 90px);
+            grid-template-rows: repeat(3, 90px);
+        }
+        .board-cell {
+             font-size: 2.5rem;
+        }
+    }

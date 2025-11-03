@@ -1,3 +1,3 @@
 export enum GameSide {
-    X,O
+    X='X',O='O',EMPTY=''
 }
