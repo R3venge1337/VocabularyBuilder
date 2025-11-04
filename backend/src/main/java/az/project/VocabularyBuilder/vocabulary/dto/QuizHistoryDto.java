@@ -9,13 +9,13 @@ public interface QuizHistoryDto {
 
     UUID getQuizUuid();
 
-    int getScoreCorrect();
+    Integer getScoreCorrect();
 
-    int getScoreTotal();
+    Integer getScoreTotal();
 
-    double getAccuracyPercent();
+    Double getAccuracyPercent();
 
-    int getDurationSeconds();
+    Integer getDurationSeconds();
 
     LocalDateTime getDateCompleted();
 }
