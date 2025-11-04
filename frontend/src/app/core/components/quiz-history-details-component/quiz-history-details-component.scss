@@ -1,0 +1,167 @@
+.details-container {
+        max-width: 1000px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background-color: #f7f7f7;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    .details-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+        border-bottom: 3px solid #6366f1;
+        padding-bottom: 0.5rem;
+    }
+    .quiz-uuid {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        padding: 1rem;
+        border-radius: 0.75rem;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+    .stat-value {
+        display: block;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.25rem;
+    }
+    .stat-label {
+        display: block;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        color: #555;
+    }
+    .stat-correct {
+        background-color: #e0f2fe; 
+        color: #0c4a6e;
+    }
+    .stat-duration {
+        background-color: #fffbeb; 
+        color: #a16207;
+    }
+    .accuracy-excellent {
+        background-color: #dcfce7;
+        color: #16a34a;
+    }
+    .accuracy-good {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+    .accuracy-poor {
+        background-color: #fee2e2;
+        color: #dc2626;
+    }
+    .results-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+        margin-top: 2rem;
+    }
+    .results-table-wrapper {
+        overflow-x: auto;
+        border-radius: 0.5rem;
+        border: 1px solid #ddd;
+    }
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
+    }
+    .table-head {
+        background-color: #6366f1;
+        color: white;
+    }
+    .table-header {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .table-cell {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        color: #333;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid #eee;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+    .row-correct {
+        background-color: #f0fdf4;
+    }
+    .row-incorrect {
+        background-color: #fef2f2;
+    }
+    .status-tag-correct {
+        color: #16a34a;
+        font-weight: 700;
+    }
+    .status-tag-incorrect {
+        color: #dc2626;
+        font-weight: 700;
+    }
+    .text-success {
+      color: #047857;
+      font-weight: 500;
+    }
+    .flex-center {
+        display: flex;
+        justify-content: center;
+    }
+    .mt-3 {
+        margin-top: 1.5rem;
+    }
+    .close-button {
+        padding: 0.75rem 1.5rem;
+        background-color: #9ca3af;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: background-color 0.2s, transform 0.2s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .close-button:hover {
+        background-color: #6b7280;
+        transform: translateY(-1px);
+    }
+    @media (max-width: 768px) {
+        .hidden-on-tablet {
+            display: none;
+        }
+    }
+    @media (max-width: 600px) {
+        .hidden-on-mobile {
+            display: none;
+        }
+        .details-container {
+            padding: 1rem;
+            margin: 1rem auto;
+            border-radius: 0;
+        }
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        .results-table {
+            min-width: 500px;
+        }
+    }
