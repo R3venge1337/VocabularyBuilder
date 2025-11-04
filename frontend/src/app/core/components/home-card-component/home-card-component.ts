@@ -19,7 +19,7 @@ export class HomeCardComponent {
   featureCards = [
     { title: 'Quiz Słówek', description: 'Buduj słownictwo, dodawaj nowe wyrazy i sprawdzaj swoją wiedzę w dynamicznym quizie.', path: '/quiz', icon: '📝' },
     { title: 'Tic-Tac-Toe', description: 'Graj w klasyczną grę przeciwko sztucznej inteligencji, a Twoje wyniki zostaną zapisane w Historii Gier.', path: '/tictactoe', icon: '🎮' },
-    { title: 'Moja Historia', description: 'Śledź swoje postępy w nauce słówek i statystyki gier w jednym miejscu.', path: '/game/history', icon: '📈' },
+    { title: 'Historia Gier', description: 'Śledź swoje statystyki gier w jednym miejscu.', path: '/game/history', icon: '📈' },
   ];
 
 }

@@ -1,0 +1,66 @@
+<div class="details-container">
+        <h2 class="details-title">Podsumowanie Quizu</h2>
+        <p class="quiz-uuid">ID Quizu: {{ quizDetails()!.quizUuid }}</p>
+
+        <!-- KARTA STATYSTYK GLOBALNYCH -->
+        <div class="stats-grid">
+            <div class="stat-card stat-correct">
+                <span class="stat-value">{{ quizDetails()!.scoreCorrect }} / {{ quizDetails()!.scoreTotal }}</span>
+                <span class="stat-label">Wynik</span>
+            </div>
+            <div class="stat-card" [ngClass]="getAccuracyClass(quizDetails()!.accuracyPercent)">
+                <span class="stat-value">{{ quizDetails()?.accuracyPercent| number:'1.0-2' }}%</span>
+                <span class="stat-label">Dokładność</span>
+            </div>
+            <div class="stat-card stat-duration">
+                <span class="stat-value">{{ quizDetails()?.durationSeconds }}s</span>
+                <span class="stat-label">Czas Trwania</span>
+            </div>
+        </div>
+
+        <h3 class="results-header">Szczegóły pytań ({{ quizDetails()!.itemResults.length }} słów)</h3>
+
+        <!-- TABELA SZCZEGÓŁOWYCH WYNIKÓW -->
+        <div class="results-table-wrapper">
+          <table class="results-table">
+            <thead class="table-head">
+              <tr>
+                <th class="table-header word-col">Słowo (EN)</th>
+                <th class="table-header pos-col hidden-on-mobile">Część Mowy</th>
+                <th class="table-header status-col">Status</th>
+                <th class="table-header user-ans-col">Twoja Odpowiedź</th>
+                <th class="table-header correct-ans-col hidden-on-tablet">Poprawna Odpowiedź</th>
+                <th class="table-header mastery-col hidden-on-mobile">Opanowanie</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              @for (item of quizDetails()!.itemResults; track item.entryId) {
+                <tr class="table-row" [ngClass]="item.isCorrect ? 'row-correct' : 'row-incorrect'">
+                  <td class="table-cell word-col font-bold">{{ item.wordPhraseEn }}</td>
+                  <td class="table-cell pos-col hidden-on-mobile">{{ item.partOfSpeech }}</td>
+                  <td class="table-cell status-col">
+                      <span [ngClass]="item.isCorrect ? 'status-tag-correct' : 'status-tag-incorrect'">
+                          {{ item.isCorrect ? '✓ Poprawnie' : '✗ Błędnie' }}
+                      </span>
+                  </td>
+                  <td class="table-cell user-ans-col">
+                      {{ item.userAnswer || 'Brak odpowiedzi' }}
+                  </td>
+                  <td class="table-cell correct-ans-col hidden-on-tablet text-success">
+                      {{ item.correctAnswer }}
+                  </td>
+                  <td class="table-cell mastery-col hidden-on-mobile">
+                      {{ getMasteryStatusLabel(item.finalMasteryStatus) }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex-center mt-3">
+          <button class="close-button" (click)="closeDetails.emit()">
+              &larr; Powrót do Historii
+          </button>
+        </div>
+    </div>

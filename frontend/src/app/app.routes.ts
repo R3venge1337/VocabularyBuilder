@@ -11,7 +11,7 @@ export const routes: Routes = [
     },
     {
         path: 'quiz',
-        loadComponent: () => import('./features/vocabulary-quiz/pages/vocabluary-quiz-page/vocabluary-quiz-page').then(m => m.VocabluaryQuizPage)
+        loadComponent: () => import('./features/vocabulary-quiz/pages/vocabulary-quiz-page/vocabulary-quiz-page').then(m => m.VocabularyQuizPage),
     },
     {
         path: 'tictactoe',
@@ -20,6 +20,10 @@ export const routes: Routes = [
     {
         path: 'game/history',
         loadComponent: () => import('./core/components/game-history-page/game-history-page').then(m => m.GameHistoryPage)
+    },
+    {
+        path: 'quiz/history',
+        loadComponent: () => import('./core/pages/quiz-history-page/quiz-history-page').then(m => m.QuizHistoryPage),
     },
     { 
         path: '', 

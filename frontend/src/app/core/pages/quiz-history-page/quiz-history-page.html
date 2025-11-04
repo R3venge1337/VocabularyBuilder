@@ -1,0 +1,31 @@
+  <div class="page-wrapper">
+      <h1 class="main-header">Panel Historii Quizów</h1>
+      @if (quizDetails()) {
+        <app-quiz-history-details-component
+          [quizDetails]="quizDetails()"
+          (closeDetails)="clearSelectedGame()"
+        />
+
+      } @else {
+        <div class="list-wrapper">
+            <app-quiz-history-table-component
+                [historyList]="quizHistoryList()"
+                [isLoading]="isLoading()"
+                [error]="error()"
+                (showDetails)="setSelectedGame($event)"
+                (refreshHistory)="loadQuizHistory(NUMBER_OF_GAMES)"
+            />
+    @if (selectedGame() && isLoading()) {
+                <div class="loading-overlay">
+                    <div class="loading-content">
+                        <svg class="spinner-xl" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="#FFF" stroke-width="4" fill="none" class="opacity-25"></circle>
+                            <path fill="#FFF" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" class="opacity-75"></path>
+                        </svg>
+                        <p>Ładowanie szczegółów dla quizu {{ selectedGame()?.quizUuid }}...</p>
+                    </div>
+                </div>
+            }
+        </div>
+      }
+    </div>

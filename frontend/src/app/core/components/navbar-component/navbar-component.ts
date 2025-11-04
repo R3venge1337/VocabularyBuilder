@@ -17,6 +17,7 @@ export class NavbarComponent {
     { path: '/home', label: 'Home 🏠' },
     { path: '/vocabulary', label: 'Moje Słownictwo 📖' },
     { path: '/quiz', label: 'Quiz Słówek 📝' },
+    { path: '/quiz/history', label: 'Historia Quizów 📊' },
     { path: '/tictactoe', label: 'Tic-Tac-Toe 🎮' },
     { path: '/game/history', label: 'Historia Gier 📊' },
   ];

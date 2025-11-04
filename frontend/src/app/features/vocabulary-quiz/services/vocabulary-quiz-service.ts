@@ -5,6 +5,7 @@ import { count, Observable } from 'rxjs';
 import { QuizDto } from '../models/quizDto';
 import { QuizViewDto } from '../models/quizViewDto';
 import { QuizResultsDto } from '../models/quizResultsDto';
+import { QuizHistoryDto } from '../../../shared/models/quizHistoryDto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,11 @@ export class VocabularyQuizService {
 
    getQuizDetails(quizUuid: string): Observable<any> {
     return this.http.get<QuizViewDto>(`${this.API_URL}/quizzes/`+quizUuid);
+   }
+
+   getRecentQuizzes(limit: number): Observable<any> {
+    let params = new HttpParams();
+    params = params.set('limit', limit);
+    return this.http.get<QuizHistoryDto>(`${this.API_URL}/quizzes/history`, {params: params});
    }
 }

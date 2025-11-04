@@ -15,16 +15,16 @@ public interface VocabularyQuizRepository extends JpaRepository<VocabularyQuiz, 
     Optional<VocabularyQuiz> findByQuizUuid(final UUID uuid);
 
     @Query(value = """
-                SELECT 
-                    q.quizUuid,
-                    q.scoreCorrect,
-                    q.scoreTotal,
-                    q.accuracyPercent,
-                    q.durationSeconds,
-                    q.dateCompleted
-                FROM VocabularyQuiz q
-                ORDER BY q.dateCompleted DESC
-                LIMIT :limit
-            """)
+            SELECT 
+                q.quizUuid AS quizUuid,
+                q.scoreCorrect AS scoreCorrect,
+                q.scoreTotal AS scoreTotal,
+                q.accuracyPercent AS accuracyPercent,
+                q.durationSeconds AS durationSeconds,
+                q.dateCompleted AS dateCompleted
+            FROM VocabularyQuiz q
+            ORDER BY q.dateCompleted DESC
+            LIMIT :limit
+        """)
     List<QuizHistoryDto> findRecentQuizzes(@Param("limit") int limit);
 }

@@ -9,12 +9,12 @@ import { VocabularyQuizSummaryComponent } from "../../components/vocabulary-quiz
 import { QuizViewDto } from '../../models/quizViewDto';
 
 @Component({
-  selector: 'app-vocabluary-quiz-page',
+  selector: 'app-vocabulary-quiz-page',
   imports: [VocabularyQuizInfoComponent, VocabularyQuizQuestionsComponent, VocabularyQuizSummaryComponent],
-  templateUrl: './vocabluary-quiz-page.html',
-  styleUrl: './vocabluary-quiz-page.scss'
+  templateUrl: './vocabulary-quiz-page.html',
+  styleUrl: './vocabulary-quiz-page.scss'
 })
-export class VocabluaryQuizPage implements OnInit {
+export class VocabularyQuizPage implements OnInit {
 
  // --- Stany Aplikacji ---
   latestQuizUuid = signal<string | null>(null); 
