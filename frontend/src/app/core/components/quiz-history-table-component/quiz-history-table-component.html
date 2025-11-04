@@ -1,0 +1,79 @@
+<div class="main-container">
+      <h2 class="component-title">
+        Historia Quizów Słownictwa
+      </h2>
+
+      @if (isLoading()) {
+          <div class="state-message state-message-loading">
+              Ładowanie historii quizów...
+          </div>
+      } @else if (error()) {
+          <div class="error-message" role="alert">
+              Wystąpił błąd: {{ error() }}
+          </div>
+      } @else if (historyList().length === 0) {
+          <div class="state-message state-message-empty">
+              Brak rozegranych quizów w historii.
+          </div>
+      } @else {
+          <div class="table-wrapper">
+              <table class="game-table">
+                  <thead class="table-head">
+                      <tr>
+                          <th class="table-header w-25">Wynik</th>
+                          <th class="table-header w-25">Data Zakończenia</th>
+                          <th class="table-header w-25">Dokładność</th>
+                          <th class="table-header hidden-on-mobile w-15">Czas Trwania (s)</th>
+                          <th class="table-header w-10 text-center">Akcje</th>
+                      </tr>
+                  </thead>
+                  <tbody class="table-body">
+                      @for (quiz of historyList(); track quiz.quizUuid) {
+                          <tr class="table-row">
+                              <td class="table-cell table-cell-main">
+                                  {{ quiz.scoreCorrect }} / {{ quiz.scoreTotal }}
+                              </td>
+                              <td class="table-cell table-cell-date">
+                                  {{ quiz.dateCompleted | date:'dd.MM.yyyy HH:mm' }}
+                              </td>
+                              <td class="table-cell table-cell-accuracy">
+                                  <span [ngClass]="getAccuracyClass(quiz.accuracyPercent)">
+                                      {{ quiz.accuracyPercent | number:'1.0-2' }}%
+                                  </span>
+                              </td>
+                              <td class="table-cell hidden-on-mobile table-cell-duration">
+                                  {{ quiz.durationSeconds }}s
+                              </td>
+                              <td class="table-cell text-center">
+                                  <button class="action-button" (click)="showDetails.emit(quiz)">
+                                      Podsumowanie
+                                  </button>
+                              </td>
+                          </tr>
+                      }
+                  </tbody>
+              </table>
+          </div>
+      }
+
+      <div class="refresh-button-container">
+          <button 
+              (click)="refreshHistory.emit()" 
+              [disabled]="isLoading()"
+              class="refresh-button"
+              [ngClass]="{'refresh-button-disabled': isLoading()}"
+          >
+              <span class="button-content">
+                  @if (isLoading()) {
+                      <svg class="spinner" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" class="opacity-25"></circle>
+                          <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" class="opacity-75"></path>
+                      </svg>
+                      <span>Ładowanie...</span>
+                  } @else {
+                      <span>Odśwież Historię</span>
+                  }
+              </span>
+          </button>
+      </div>
+    </div>
