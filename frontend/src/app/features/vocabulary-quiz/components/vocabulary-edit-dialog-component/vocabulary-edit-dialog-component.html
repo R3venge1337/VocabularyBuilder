@@ -29,7 +29,7 @@
                         <label for="edit-part-of-speech" class="form-label">Część Mowy <span class="required-star">*</span></label>
                         <select id="edit-part-of-speech"
                                 [value]="currentEditEntry()?.partOfSpeech"
-                                (change)="updateEditField('partOfSpeech', $event.target)"
+                               (change)="updateEditField('partOfSpeech', getSelectValue($event))"
                                 class="form-select" required>
                             <option value="" disabled selected>-- Wybierz --</option>
                             @for (option of partOfSpeechOptions(); track option[0]) {
@@ -42,7 +42,7 @@
                         <label for="edit-context-source" class="form-label">Źródło Kontekstu <span class="required-star">*</span></label>
                         <select id="edit-context-source"
                                 [value]="currentEditEntry()?.contextSource"
-                                (change)="updateEditField('contextSource', $event.target)"
+                                (change)="updateEditField('contextSource', getSelectValue($event))"
                                 class="form-select" required>
                             <option value="" disabled selected>-- Wybierz --</option>
                             @for (option of contextSourceOptions(); track option[0]) {

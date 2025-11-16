@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { HttpErrorResponse } from '@angular/common/http';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-vocabulary-edit-dialog-component',
@@ -38,7 +39,7 @@ export class VocabularyEditDialogComponent {
 
   isProcessing = signal(false);
   error = signal<any>(null);
-  deleteStatus = signal<'success' | 'failure' | null>(null);
+  editStatus = signal<'success' | 'failure' | null>(null);
 
 
   openEditDialog(entry: VocabularyEntryView) {
@@ -56,6 +57,7 @@ export class VocabularyEditDialogComponent {
     async saveEdit(event: Event): Promise<void> {
       event.preventDefault()
         const editedEntry = this.currentEditEntry();
+        console.log(editedEntry)
         if (!editedEntry) return;
 
         if (!editedEntry.wordPhraseEn.trim() || !editedEntry.translationPl.trim() || !editedEntry.partOfSpeech || !editedEntry.contextSource) {
@@ -66,13 +68,12 @@ export class VocabularyEditDialogComponent {
         try {
        await firstValueFrom(this.vocabularyService.updateEntry(editedEntry.id, editedEntry))
       
-      this.deleteStatus.set('success');
-      this.toastService.success(`Słówko ID ${this.data.id} zostało trwale zmienione`)
+      this.editStatus.set('success');
     } catch (err: any) {
       console.error("Błąd podczas update:", err);
       this.error.set(err); 
       this.toastService.error(err.error.message)
-      this.deleteStatus.set('failure'); 
+      this.editStatus.set('failure'); 
     } finally {
       this.isProcessing.set(false); 
     }
@@ -80,20 +81,33 @@ export class VocabularyEditDialogComponent {
     }
    
     updateEditField<K extends keyof VocabularyEntryView>(field: K, value: any): void {
+      console.log(this.currentEditEntry())
         this.currentEditEntry.update(entry => {
             if (!entry) return null;
             
             let processedValue = value;
+
+            if(field === 'sourceTitle' && value == ""){
+          processedValue = null
+            }
 
             if (field === 'episodeNumber' || field === 'timeOffsetSeconds') {
                 const num = parseInt(value, 10);
                 processedValue = isNaN(num) || num <= 0 ? null : num;
             } else if (typeof processedValue === 'string') {
                 processedValue = processedValue.trim();
+            } else if (typeof value === 'string' && (field === 'partOfSpeech' || field === 'contextSource')) {
+                // Logic for enum selection (value is the string key of the enum)
+                processedValue = value as any;
             }
 
             return { ...entry, [field]: processedValue as any };
         });
     }
+
+      getSelectValue(event: Event): string {
+        console.log(event)
+    return (event.target as HTMLSelectElement).value;
+  }
 
 }
