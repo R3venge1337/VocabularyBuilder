@@ -1,2 +1,4 @@
-<app-vocabulary-add-form-component></app-vocabulary-add-form-component>
-<app-vocabulary-table-component></app-vocabulary-table-component>
+<app-vocabulary-add-form-component
+(vocabularyAdded)="handleVocabularyAdded($event)"
+></app-vocabulary-add-form-component>
+<app-vocabulary-table-component #table></app-vocabulary-table-component>

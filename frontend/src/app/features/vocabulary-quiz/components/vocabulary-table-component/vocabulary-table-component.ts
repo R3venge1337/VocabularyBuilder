@@ -205,10 +205,11 @@ handleSortChange(sort: Sort): void {
       data: word 
     });
 
-    dialogRef.afterClosed().subscribe((deletedId: number | false) => {
-      if (typeof deletedId === 'number') {
-        this.toastService.success(`Słówko ID ${deletedId} zostało trwale usunięte.`);
-      } else if (deletedId === false) {
+    dialogRef.afterClosed().subscribe((wasDeleted: boolean | undefined) => {
+      if(wasDeleted === true) {
+        this.toastService.success(`Słówko ID ${word.id} zostało trwale usunięte.`);
+          this.refreshData();
+      }else if (wasDeleted=== false) {
         this.toastService.info('Usuwanie anulowane lub nieudane.');
       }
     });
@@ -219,12 +220,36 @@ handleSortChange(sort: Sort): void {
       width: '380px',
       data: word 
     });
-    dialogRef.afterClosed().subscribe((editId: number | false) => {
-      if (typeof editId === 'number') {
-        this.toastService.success(`Słówko ID ${editId} zostało trwale.`);
-      } else if (editId === false) {
+    dialogRef.afterClosed().subscribe((wasEdited: boolean | undefined) => {
+      if (wasEdited === true) {
+        this.toastService.success(`Słówko ID ${word.id} zostało trwale.`);
+        this.refreshData();
+      } else if (wasEdited === false) {
         this.toastService.info('Usuwanie anulowane lub nieudane.');
       }
     });
+  }
+
+   public refreshData(newEntry?: VocabularyEntryView): void {
+      // Jeśli otrzymaliśmy nowy wpis i jesteśmy na odpowiedniej stronie/sortowaniu, 
+      // spróbuj zaktualizować listę lokalnie
+      if (newEntry && this.pagination().page === 1 && this.pagination().sortField === 'createdAt' && this.pagination().sortDirection === 'DESC') {
+          this.pageData.update(data => {
+              const newContent = [newEntry, ...data.content];
+              
+              if (newContent.length > data.pageSize) {
+                  newContent.pop(); 
+              }
+              
+              return {
+                  ...data,
+                  content: newContent,
+                  totalElements: data.totalElements + 1
+              };
+          });
+      } else {
+          // W przeciwnym razie wymuś pełne załadowanie danych z API
+          this.getAllEntries(this.filters(), this.pagination());
+      }
   }
 }
