@@ -1,6 +1,58 @@
 # VocabularyBuilder
+
+* [Features](#features)
+* [Technologies](#technologies)
+* [Environment Variables](#environment-variables)
+* [Secret properties](#secret-properties)
+* [Database schema](#database-schema)
+* [Application view](#application-view)
+
+## Features
+
+- Light/dark mode toggle
+- Live previews
+- Fullscreen mode
+- Cross platform
 ##Technologies
-##Endpoints
+## API Reference
+
+#### Get all items
+
+```http
+  GET /api/items
+```
+
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
+#### Get item
+
+```http
+  GET /api/items/${id}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `id`      | `string` | **Required**. Id of item to fetch |
+
+#### add(num1, num2)
+
+Takes two numbers and returns the sum.
+## Environment variables
+
+To run this project, you will need to add the following environment variables to your .env file
+`POSTGRES_USER`
+`POSTGRES_PASSWORD`
+
+## Secret properties
+To run this project, you will need to add the following properties to your .secret.properties file
+`spring.datasource.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB
+spring.liquibase.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+game.session.cleanup.rate=6000`
+
 ##Database Schema
 <img width="6096" height="3180" alt="Image" src="https://github.com/user-attachments/assets/595aec33-a411-4b15-b89e-92baa0ec38a8" />
 ##Application view
