@@ -1,6 +1,8 @@
 # VocabularyBuilder
-
-
+##Technologies
+##Endpoints
+##Database Schema
+<img width="6096" height="3180" alt="Image" src="https://github.com/user-attachments/assets/595aec33-a411-4b15-b89e-92baa0ec38a8" />
 ##Application view
 <img width="1919" height="918" alt="Image" src="https://github.com/user-attachments/assets/c41130cc-7e8b-4161-9d0c-604f5746a838" />
 
