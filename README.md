@@ -1,61 +1,100 @@
-# VocabularyBuilder
+# 📚 VocabularyBuilder
 
+> **A project for building and managing vocabulary, offering interactive tests (Quiz) and a mini-game (Tic-Tac-Toe) to reinforce learning of words.**
+This project was developed as part of the "Building a Rich User Interface" Master's degree course.
+
+## 📝 Table of Contents
+* [Project Overview](#project-overview)
 * [Features](#features)
 * [Technologies](#technologies)
+* [API Reference](#api-reference)
+    * [Vocabulary Entries Management](#vocabulary-entries-management)
+    * [Quizzes](#quizzes)
+    * [Tic-Tac-Toe Game](#tic-tac-toe-game)
 * [Environment Variables](#environment-variables)
-* [Secret properties](#secret-properties)
-* [Database schema](#database-schema)
-* [Application view](#application-view)
+* [Secret Properties](#secret-properties)
+* [Database Schema](#database-schema)
+* [Application View](#application-view)
 
-## Features
+---
+## 🛠️ Technologies
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
-##Technologies
-## API Reference
+The project utilizes a modern **full-stack** approach:
 
-#### Get all items
+### Backend Technologies (Java/Spring)
 
-```http
-  GET /api/items
-```
+* **Backend Framework:** **Spring Boot** (version 3.5.6)
+* **Programming Language:** **Java 25**
+* **Database:** **PostgreSQL**
+* **ORM/Persistence:** **Spring Data JPA** (Hibernate)
+* **Schema Migration:** **Liquibase**
+* **Weryfikacja Danych:** `spring-boot-starter-validation`
+* **Build Tool:** **Maven**
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
+### Frontend Technologies (Angular)
 
-#### Get item
+The user interface (UI) is built using the following technologies:
 
-```http
-  GET /api/items/${id}
-```
+* **Framework:** **Angular** (version 20.3.0)
+* **Styling/UI Components:** **Angular Material** (version 20.2.9) and **Angular CDK**
+* **Reactive Programming:** **RxJS**
+* **Notifications:** **ngx-toastr**
+* **Development Tools:** **Angular CLI**
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
+---
 
-#### add(num1, num2)
+## 🔗 API Reference
 
-Takes two numbers and returns the sum.
+Below are the key endpoints provided by the application, derived from the Java Controllers.
+
+### Vocabulary Entries Management
+
+| Method | Endpoint (Path) | Description | Controller |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/vocabulary` | Retrieves a **paged** list of entries. Supports filtering via `FilterVocabularyEntryForm`. | `VocabularyEntryController` |
+| `GET` | `/api/vocabulary/{id}` | Retrieves details of an entry by its ID. | `VocabularyEntryController` |
+| `POST` | `/api/vocabulary` | **Creates** a new entry. Requires a `CreateVocabularyEntryForm` object. | `VocabularyEntryController` |
+| `PUT` | `/api/vocabulary/{id}` | **Updates** an existing entry. Requires an `UpdateVocabularyEntryForm` object. | `VocabularyEntryController` |
+| `DELETE` | `/api/vocabulary/{id}` | **Deletes** the entry with the given ID. | `VocabularyEntryController` |
+| `GET` | `/api/vocabulary/count` | Returns the total number of entries in the database. | `VocabularyEntryController` |
+
+### Quizzes
+
+| Method | Endpoint (Path) | Description | Controller |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/quiz/generate` | Generates a new **Quiz** from random entries (`default=20`). | `VocabularyQuizController` |
+| `POST` | `/api/quiz/submit` | Saves the results of the submitted Quiz (`QuizResultsDto`). | `VocabularyQuizController` |
+| `GET` | `/api/quiz/history` | Retrieves a list of recent Quizzes (`default=10`). | `VocabularyQuizController` |
+| `GET` | `/api/quiz/details/{quizUuid}` | Retrieves the detailed view of a Quiz by its UUID. | `VocabularyQuizController` |
+
+### Tic-Tac-Toe Game
+
+| Method | Endpoint (Path) | Description | Controller |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/tictactoe/start` | Starts a new game session (returns session ID). | `TicTacToeController` |
+| `POST` | `/api/tictactoe/move` | Processes a player's move in the active session (`MoveRequestDto`). | `TicTacToeController` |
+| `GET` | `/api/tictactoe/history` | Retrieves the history of recent games. | `TicTacToeController` |
+| `GET` | `/api/tictactoe/replay/{sessionUuid}` | Retrieves the details and sequence of moves for a specific game session. | `TicTacToeController` |
+
+---
+
 ## Environment variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to add the following environment variables to your .env file used in docker.compose for postgreSQL image
 `POSTGRES_USER`
 `POSTGRES_PASSWORD`
 
 ## Secret properties
 To run this project, you will need to add the following properties to your .secret.properties file
-`spring.datasource.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB
-spring.liquibase.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-game.session.cleanup.rate=6000`
+`spring.datasource.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB`
+`spring.liquibase.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB`
+`spring.datasource.username=postgres`
+`spring.datasource.password=postgres`
+`game.session.cleanup.rate=6000`
 
-##Database Schema
+## Database Schema
 <img width="6096" height="3180" alt="Image" src="https://github.com/user-attachments/assets/595aec33-a411-4b15-b89e-92baa0ec38a8" />
-##Application view
+## Application view
 <img width="1919" height="918" alt="Image" src="https://github.com/user-attachments/assets/c41130cc-7e8b-4161-9d0c-604f5746a838" />
 
 <img width="1919" height="915" alt="Image" src="https://github.com/user-attachments/assets/ef30e6f9-d595-423c-bd8a-0fc39448c59d" />
