@@ -7,7 +7,7 @@ This project was developed as part of the "Building a Rich User Interface" Maste
 * [Project Overview](#project-overview)
 * [Features](#features)
 * [Technologies](#technologies)
-* **[How to Run Locally](#how-to-run-locally)**
+* [How to Run Locally](#how-to-run-locally)
 * [API Reference](#api-reference)
     * [Vocabulary Entries Management](#vocabulary-entries-management)
     * [Quizzes](#quizzes)
@@ -142,7 +142,7 @@ The project includes unit and integration tests written using **JUnit 5** and **
 To run this project, you will need to add the following environment variables to your .env file used in docker.compose for postgreSQL image
 `POSTGRES_USER`
 `POSTGRES_PASSWORD`
-
+---
 ## Secret properties
 To run this project, you will need to add the following properties to your .secret.properties file
 `spring.datasource.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB`
@@ -150,9 +150,11 @@ To run this project, you will need to add the following properties to your .secr
 `spring.datasource.username=postgres`
 `spring.datasource.password=postgres`
 `game.session.cleanup.rate=6000`
+---
 
 ## Database Schema
 <img width="6096" height="3180" alt="Image" src="https://github.com/user-attachments/assets/595aec33-a411-4b15-b89e-92baa0ec38a8" />
+---
 ## Application view
 <img width="1919" height="918" alt="Image" src="https://github.com/user-attachments/assets/c41130cc-7e8b-4161-9d0c-604f5746a838" />
 
