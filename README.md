@@ -7,6 +7,7 @@ This project was developed as part of the "Building a Rich User Interface" Maste
 * [Project Overview](#project-overview)
 * [Features](#features)
 * [Technologies](#technologies)
+* **[How to Run Locally](#how-to-run-locally)**
 * [API Reference](#api-reference)
     * [Vocabulary Entries Management](#vocabulary-entries-management)
     * [Quizzes](#quizzes)
@@ -75,6 +76,64 @@ Below are the key endpoints provided by the application, derived from the Java C
 | `POST` | `/api/tictactoe/move` | Processes a player's move in the active session (`MoveRequestDto`). | `TicTacToeController` |
 | `GET` | `/api/tictactoe/history` | Retrieves the history of recent games. | `TicTacToeController` |
 | `GET` | `/api/tictactoe/replay/{sessionUuid}` | Retrieves the details and sequence of moves for a specific game session. | `TicTacToeController` |
+
+---
+
+## 🚀 How to Run Locally
+
+Follow these steps to set up and run the entire application (Backend, Frontend, and Database) using **Docker Compose**.
+
+### 1. Prerequisites
+
+* **JDK 25+** (for building the backend)
+* **Node.js & npm** (for the frontend)
+* **Docker** and **Docker Compose** installed on your system.
+
+### 2. Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/R3venge1337/VocabularyBuilder.git](https://github.com/R3venge1337/VocabularyBuilder.git)
+    cd VocabularyBuilder
+    ```
+2.  **Configure Environment:**
+    * Ensure your `.env` file for Docker contains the `POSTGRES_USER` and `POSTGRES_PASSWORD` variables.
+    * Ensure your Spring Boot configuration file (`.secret.properties` or similar) contains the correct database connection details (as listed in the [Secret Properties](#secret-properties) section).
+
+### 3. Build and Run
+
+1.  **Build the Backend (Java):**
+    ```bash
+    ./mvnw clean install
+    ```
+2.  **Start Services (Database & Backend):**
+    *If you use Docker Compose to run the whole stack:*
+    ```bash
+    docker-compose up --build
+    ```
+3.  **Start the Frontend (Angular):**
+    ```bash
+    cd frontend # Change to the frontend directory
+    npm install
+    npm start
+    ```
+
+### Access Points
+
+* **Backend API:** `http://localhost:8080`
+* **Frontend UI:** `http://localhost:4200`
+
+---
+
+## 🧪 Testing Status
+
+The project includes unit and integration tests written using **JUnit 5** and **Mockito**.
+
+* **Tested Layers:** The tests primarily cover the **Service** and **Facade** layers to ensure core business logic correctness and testable design.
+* **Running Tests:** Execute the following command in the root directory:
+    ```bash
+    ./mvnw test
+    ```
 
 ---
 
