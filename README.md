@@ -150,11 +150,13 @@ To run this project, you will need to add the following environment variables to
 
 ## Secret properties
 To run this project, you will need to add the following properties to your .secret.properties file
-`spring.datasource.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB`
-`spring.liquibase.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB`
-`spring.datasource.username=postgres`
-`spring.datasource.password=postgres`
-`game.session.cleanup.rate=6000`
+```properties
+spring.datasource.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB
+spring.liquibase.url=jdbc:postgresql://postgres:5432/vocabularyBuilderDB
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+game.session.cleanup.rate=6000
+```
 
 ## Database schema
 <img width="6096" height="3180" alt="Image" src="https://github.com/user-attachments/assets/595aec33-a411-4b15-b89e-92baa0ec38a8" />
