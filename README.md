@@ -18,12 +18,12 @@ This project was developed as part of the "Building a Rich User Interface" Maste
 
 ---
 
-## 💡 Project Overview
+##  Project Overview
 
 **VocabularyBuilder** is a full-stack application. The **backend** is a **RESTful API** built with **Spring Boot** (Java), providing data management and game logic. The **frontend** is a Single Page Application (SPA) built with **Angular**, providing an interactive user interface for vocabulary management and testing.
 
 ---
-## 🛠️ Technologies
+##  Technologies
 
 The project utilizes a modern **full-stack** approach:
 
@@ -49,7 +49,7 @@ The user interface (UI) is built using the following technologies:
 
 ---
 
-## 🔗 API Reference
+##  API Reference
 
 Below are the key endpoints provided by the application, derived from the Java Controllers.
 
@@ -84,7 +84,7 @@ Below are the key endpoints provided by the application, derived from the Java C
 
 ---
 
-## 🚀 How to Run Locally
+##  How to Run Locally
 
 Follow these steps to set up and run the entire application (Backend, Frontend, and Database) using **Docker Compose**.
 
@@ -130,7 +130,7 @@ Follow these steps to set up and run the entire application (Backend, Frontend, 
 
 ---
 
-## 🧪 Testing Status
+##  Testing Status
 
 The project includes unit and integration tests written using **JUnit 5** and **Mockito**.
 
